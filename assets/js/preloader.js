@@ -102,17 +102,12 @@
 /* ══════════════════════════════════════ NAV — TOGGLE */
 (function () {
 
-  const map = {
-    'ai':             'ia',
-    '3d':             'tres-d',
-    'vfx':            'vfx',
-    'graphic-design': 'graphic-design'
-  };
+  const categories = ['ai', '3d', 'vfx', 'graphic-design'];
 
-  Object.entries(map).forEach(([sectionKey, targetId]) => {
+  categories.forEach(cat => {
 
-    const btn     = document.querySelector(`.nav-links button[data-section="${sectionKey}"]`);
-    const targets = document.querySelectorAll(`[id="${targetId}"]`);
+    const btn     = document.querySelector(`.nav-links button[data-section="${cat}"]`);
+    const targets = document.querySelectorAll(`.float-img[data-category="${cat}"]`);
 
     if (!btn || !targets.length) return;
 
@@ -123,15 +118,12 @@
 
       targets.forEach(el => {
         if (isActive) {
-          /* Apagar → scale(0) + opacity(0) */
           gsap.to(el, {
-            scale: 0,
-            opacity: 0,
+            scale: 0, opacity: 0,
             duration: 0.35,
             ease: 'power2.in'
           });
         } else {
-          /* Encender → scale(1) + opacity(1) */
           gsap.fromTo(el,
             { scale: 0, opacity: 0 },
             { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
