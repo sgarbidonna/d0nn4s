@@ -88,7 +88,6 @@
 
     /* pointer-events propio para no depender del padre */
     content.style.pointerEvents = 'auto';
-    content.style.cursor        = 'pointer';
 
     content.addEventListener('click', e => {
       if (e.target.closest('.panel-close')) return;

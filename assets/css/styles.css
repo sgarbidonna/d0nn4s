@@ -1,4 +1,4 @@
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
 
 :root {
   --bg:   #ffffff;
@@ -13,7 +13,7 @@ html, body {
   color: var(--fg);
   overflow: hidden;
   font-family: var(--font);
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Ccircle cx='6' cy='6' r='4' fill='%230d0d0d'/%3E%3C/svg%3E") 6 6, auto;
+  cursor: none;
 }
 
 /* ══════════════════════════════════════ PRELOADER */
@@ -142,7 +142,6 @@ html, body {
 .nav-links button {
   background: none;
   border: none;
-  cursor: pointer;
   font-family: var(--font);
   font-weight: 400;
   font-size:0.8em;
@@ -252,7 +251,6 @@ html, body {
     border: none;
     font-family: var(--font);
     font-size: 14px;
-    cursor: pointer;
     color: var(--fg);
     letter-spacing: 0.1em;
 }
@@ -280,7 +278,6 @@ html, body {
 
 /* ══════════════════════════════════════ PANEL MISC — CAROUSEL */
 .project-panel.is-misc {
-  cursor: none; /* cursor custom si lo hubiera */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,10 +303,6 @@ html, body {
   pointer-events: none;
 }
 
-/* cursor izq/der dentro del panel misc */
-.project-panel.is-misc:hover {
-  cursor: pointer;
-}
 /* ══════════════════════════════════════ PANEL — PROYECTO */
 
 /* ══════════════════════════════════════ PANEL — PROYECTO */
@@ -444,7 +437,6 @@ html, body {
 
 .project-media--carousel {
   padding: 0;
-  cursor: pointer;
 }
 
 .project-carousel {
@@ -486,7 +478,6 @@ html, body {
   align-items: center;
   justify-content: center;
   border-right: 1px solid #0d0d0d;
-  cursor: pointer;
   overflow: hidden;
 }
 
@@ -588,5 +579,42 @@ html, body {
 }
 
 .hover-tooltip.visible {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════ CUSTOM CURSOR */
+#cursor {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  opacity: 0;
+}
+
+.cursor-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #0d0d0d;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-label {
+  position: absolute;
+  left: 8px;
+  top: -5px;
+  font-family: var(--font);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0d0d0d;
+  white-space: nowrap;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cursor-label.is-visible {
   opacity: 1;
 }

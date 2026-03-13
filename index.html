@@ -996,57 +996,8 @@
 <script src="./assets/js/mouse-repeler.js"></script>
 <script src="./assets/js/hover-zindex.js"></script>
 <script src="./assets/js/panels.js"></script>
-
-<!-- HOVER TOOLTIP -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const tooltipElements = document.querySelectorAll('[data-tooltip]');
-  if (!tooltipElements.length) return;
-
-  let tooltip = null;
-
-  function showTooltip(text, x, y) {
-    tooltip = document.createElement('div');
-    tooltip.className = 'hover-tooltip';
-    tooltip.textContent = text;
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
-    document.body.appendChild(tooltip);
-    requestAnimationFrame(() => tooltip.classList.add('visible'));
-  }
-
-  function moveTooltip(x, y) {
-    if (!tooltip) return;
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
-  }
-
-  function hideTooltip() {
-    if (!tooltip) return;
-    tooltip.classList.remove('visible');
-    setTimeout(() => {
-      if (tooltip) {
-        tooltip.remove();
-        tooltip = null;
-      }
-    }, 150);
-  }
-
-  tooltipElements.forEach(el => {
-    el.addEventListener('mouseenter', (e) => {
-      const text = el.dataset.tooltip;
-      if (!text) return;
-      showTooltip(text, e.clientX, e.clientY);
-    });
-
-    el.addEventListener('mousemove', (e) => {
-      moveTooltip(e.clientX, e.clientY);
-    });
-
-    el.addEventListener('mouseleave', hideTooltip);
-  });
-});
-</script>
+<script src="./assets/js/cursor.js"></script>
+
 
 
 </body>
