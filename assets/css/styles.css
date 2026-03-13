@@ -191,7 +191,7 @@ html, body {
 .panel-bg {
   position: fixed;
   inset: 0;
-  background: rgba(255,255,255,1);
+  background: rgba(255,255,255,0.6);
   backdrop-filter: blur(4px);
   z-index: 200;
   pointer-events: none;
@@ -274,4 +274,34 @@ html, body {
 /* cursor izq/der dentro del panel misc */
 .project-panel.is-misc:hover {
   cursor: pointer;
+}
+
+/* ══ PRELOADER — segunda frase ══ */
+#loader-text-2 {
+  position: absolute;
+  top: 48px;
+  left: 0; right: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  font-family: var(--font);
+  font-weight: 300;
+  font-size: clamp(28px, 5vw, 68px);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+  user-select: none;
+  opacity: 0;
+}
+
+#loader-text-2 span:not(.space) {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+#loader-text-2 .space {
+  display: inline-block;
+  width: 0;
 }
