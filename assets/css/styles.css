@@ -569,3 +569,31 @@ html, body {
   display: block;
   border: none;
 }
+
+/* ══════════════════════════════════════ HOVER TOOLTIP */
+.hover-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 12px;
+  color: #ffffff;
+  background: #313131;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(10px, 10px);
+  transition: opacity 0.15s ease;
+}
+
+.hover-tooltip.visible {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════ FORCE DEFAULT CURSOR */
+*,
+*::before,
+*::after {
+  cursor: default !important;
+}
