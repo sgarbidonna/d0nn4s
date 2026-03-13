@@ -266,7 +266,6 @@ html, body {
   font-weight: 300;
   font-size: clamp(18px, 3vw, 36px);
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   margin-bottom: 8px;
 }
 
@@ -275,7 +274,6 @@ html, body {
   font-weight: 300;
   font-size: 11px;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: rgba(13,13,13,0.4);
   margin-bottom: 48px;
 }
