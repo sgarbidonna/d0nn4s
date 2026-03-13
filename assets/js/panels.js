@@ -3,11 +3,14 @@
 (function () {
   if (typeof gsap === 'undefined') return;
 
-  let activeClose = null;
+  /* pila de closers — ESC cierra el último abierto */
+  const closeStack = [];
 
   /* ── ESC global ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && typeof activeClose === 'function') activeClose();
+    if (e.key === 'Escape' && closeStack.length) {
+      closeStack[closeStack.length - 1]();
+    }
   });
 
   /* ── Lazy load ──
@@ -15,6 +18,7 @@
      Si el panel es type="misc", inicializa el carousel al cargar.
   */
   function lazyLoad(panel, type) {
+    /* ── misc carousel (panel-content) ── */
     const content = panel.querySelector('.panel-content');
     if (content && content.dataset.lazyLoaded !== 'true') {
       content.querySelectorAll('img[data-src]').forEach(img => {
@@ -25,7 +29,7 @@
       if (type === 'misc') initCarousel(panel);
     }
 
-    /* carousel dentro de is-project */
+    /* ── project carousel (project-carousel) ── */
     const projCarousel = panel.querySelector('.project-carousel');
     if (projCarousel && projCarousel.dataset.lazyLoaded !== 'true') {
       projCarousel.querySelectorAll('img[data-src]').forEach(img => {
@@ -33,7 +37,18 @@
         img.removeAttribute('data-src');
       });
       projCarousel.dataset.lazyLoaded = 'true';
-      initProjectCarousel(panel, projCarousel);
+      initProjectCarousel(panel, projCarousel, panel.querySelector('.project-media--carousel'));
+    }
+
+    /* ── split carousel (split-carousel) ── */
+    const splitCarousel = panel.querySelector('.split-carousel');
+    if (splitCarousel && splitCarousel.dataset.lazyLoaded !== 'true') {
+      splitCarousel.querySelectorAll('img[data-src]').forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      });
+      splitCarousel.dataset.lazyLoaded = 'true';
+      initProjectCarousel(panel, splitCarousel, splitCarousel);
     }
   }
 
@@ -89,18 +104,16 @@
     });
   }
 
-  /* ── Carousel dentro de is-project ──
-     Click mitad izquierda → anterior, mitad derecha → siguiente
-     Crossfade igual que misc carousel
+  /* ── Carousel dentro de is-project / split ──
+     clickTarget: el elemento que recibe el click (media o split-carousel)
   */
-  function initProjectCarousel(panel, container) {
+  function initProjectCarousel(panel, container, clickTarget) {
     const images = [...container.querySelectorAll('.carousel-img')];
     if (!images.length) return;
 
     let current   = 0;
     let animating = false;
 
-    /* primera imagen visible */
     images[0].classList.add('is-active');
     gsap.set(images[0], { opacity: 1 });
     images.slice(1).forEach(img => gsap.set(img, { opacity: 0 }));
@@ -118,13 +131,12 @@
       current = i;
     }
 
-    const media = panel.querySelector('.project-media--carousel');
-    if (!media) return;
-    media.style.pointerEvents = 'auto';
+    if (!clickTarget) return;
+    clickTarget.style.pointerEvents = 'auto';
 
-    media.addEventListener('click', e => {
+    clickTarget.addEventListener('click', e => {
       if (e.target.closest('.panel-close')) return;
-      const { left, width } = media.getBoundingClientRect();
+      const { left, width } = clickTarget.getBoundingClientRect();
       const goNext = e.clientX > left + width / 2;
       const next = goNext
         ? (current + 1) % images.length
@@ -151,8 +163,8 @@
 
     function open() {
       if (isOpen) return;
-      isOpen      = true;
-      activeClose = closePanel;
+      isOpen = true;
+      closeStack.push(closePanel);
 
       lazyLoad(panel, type);
 
@@ -163,8 +175,9 @@
 
     function closePanel() {
       if (!isOpen) return;
-      isOpen      = false;
-      activeClose = null;
+      isOpen = false;
+      const idx = closeStack.indexOf(closePanel);
+      if (idx !== -1) closeStack.splice(idx, 1);
 
       gsap.to(panel, { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none' });
       gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });

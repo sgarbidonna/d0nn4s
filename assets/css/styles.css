@@ -2,7 +2,7 @@
 
 :root {
   --bg:   #ffffff;
-  --fg:   #0d0d0d;
+  --fg:   #313131;
   --dim:  rgba(13,13,13,0.10);
   --font: 'Azeret Mono', monospace;
 }
@@ -346,7 +346,6 @@ html, body {
   font-weight: 300;
   font-size: clamp(16px, 2vw, 30px);
   letter-spacing: 0.04em;
-  text-transform: lowercase;
   margin: 0;
   line-height: 1.15;
 }
@@ -356,7 +355,6 @@ html, body {
   font-weight: 300;
   font-size: 11px;
   letter-spacing: 0.08em;
-  text-transform: lowercase;
   margin-top: 5px;
   opacity: 0.45;
 }
@@ -374,10 +372,11 @@ html, body {
 .proj-desc {
     font-family: 'Cutive Mono', monospace;
     font-size: 0.85rem;
-    line-height: 1.75;
-    color: #000;
+    line-height: 1.25;
+    color: #313131;
     margin: 0;
     font-weight: 500;
+    text-align: justify;
 }
 .proj-desc a { color: #1D3FC1; }
 
@@ -404,9 +403,9 @@ html, body {
 
 .proj-sw-list li {
     font-family: 'Cutive Mono', monospace;
-    font-size: 0.85rem;
-    line-height: 1.75;
-    color: #000;
+    font-size: 0.65rem;
+    line-height: 1.15;
+    color: #313131;
     margin: 0;
     font-weight: 500;
 }
@@ -467,4 +466,60 @@ html, body {
 
 .carousel-img.is-active {
   opacity: 1;
+}
+/* ══════════════════════════════════════ PANEL — SPLIT (carousel + video) */
+
+.project-media--split {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* mitad izquierda: carousel */
+.split-carousel {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #0d0d0d;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.split-carousel .carousel-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.split-carousel .carousel-img.is-active {
+  opacity: 1;
+}
+
+/* mitad derecha: video */
+.split-video {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.split-video .project-video-wrap {
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+}
+
+.split-video iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
