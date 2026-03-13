@@ -590,10 +590,3 @@ html, body {
 .hover-tooltip.visible {
   opacity: 1;
 }
-
-/* ══════════════════════════════════════ FORCE DEFAULT CURSOR */
-*,
-*::before,
-*::after {
-  cursor: default !important;
-}
