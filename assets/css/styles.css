@@ -477,7 +477,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid #0d0d0d;
   overflow: hidden;
 }
 
@@ -617,4 +616,107 @@ html, body {
 
 .cursor-label.is-visible {
   opacity: 1;
+}
+/* ══════════════════════════════════════ PANEL — SCROLL HORIZONTAL */
+
+/* ══════════════════════════════════════ PANEL — SCROLL HORIZONTAL */
+
+.project-media--hscroll {
+  padding: 0;
+  overflow: hidden;
+  align-items: stretch;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.hscroll-track {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  gap: 10px;
+  padding: 0 8vw;
+  will-change: transform;
+}
+
+.hscroll-section {
+  flex: 0 0 50vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* área principal */
+.hscroll-section__main {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* carousel dentro de hscroll */
+.hscroll-section__main.split-carousel {
+  cursor: pointer;
+  width: 100%;
+}
+
+.hscroll-section__main.split-carousel .carousel-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hscroll-section__main.split-carousel .carousel-img.is-active {
+  opacity: 1;
+}
+
+/* video dentro de main */
+.split-video-top {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.split-video-top .project-video-wrap {
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+}
+
+.split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* footer: spotify fijo 152px */
+.hscroll-section__footer {
+  flex: 0 0 152px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.hscroll-section__footer iframe {
+  width: 60%;
+  min-width: 60%;
+  height: 100%;
+  display: block;
+  border-radius: 12px !important;
+}
+
+/* quitar borde nativo de iframes */
+iframe {
+  border: none;
 }

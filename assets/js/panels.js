@@ -50,6 +50,22 @@
       splitCarousel.dataset.lazyLoaded = 'true';
       initProjectCarousel(panel, splitCarousel, splitCarousel);
     }
+
+    /* ── hscroll: init carousels dentro de cada sección ── */
+    const hscrollTrack = panel.querySelector('.hscroll-track');
+    if (hscrollTrack && hscrollTrack.dataset.lazyLoaded !== 'true') {
+      hscrollTrack.querySelectorAll('img[data-src]').forEach(img => {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+      });
+      hscrollTrack.dataset.lazyLoaded = 'true';
+      hscrollTrack.querySelectorAll('.split-carousel').forEach(sc => {
+        if (sc.dataset.lazyLoaded !== 'true') {
+          sc.dataset.lazyLoaded = 'true';
+          initProjectCarousel(panel, sc, sc);
+        }
+      });
+    }
   }
 
   /* ── Carousel (misc) ──
@@ -167,6 +183,11 @@
 
       lazyLoad(panel, type);
 
+      /* activar scroll horizontal cuando el panel ya es visible */
+      if (panel.querySelector('.hscroll-track') && window.HScroll) {
+        gsap.delayedCall(1.15, () => HScroll.enable(panelId));
+      }
+
       gsap.timeline()
         .to(bg,    { y: '0%', duration: 0.48, ease: 'power2.out', pointerEvents: 'auto' })
         .to(panel, { y: '0%', duration: 1.12, ease: 'power4.out', pointerEvents: 'auto' }, '-=0.2');
@@ -178,8 +199,18 @@
       const idx = closeStack.indexOf(closePanel);
       if (idx !== -1) closeStack.splice(idx, 1);
 
-      gsap.to(panel, { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none' });
-      gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });
+      function animateClose() {
+        if (window.HScroll) HScroll.disable(panelId);
+        gsap.to(panel, { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none' });
+        gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });
+      }
+
+      /* reset suave del scroll horizontal antes de cerrar */
+      if (panel.querySelector('.hscroll-track') && window.HScroll) {
+        HScroll.resetToStart(panelId, animateClose);
+      } else {
+        animateClose();
+      }
     }
 
     floatImg.addEventListener('click', open);

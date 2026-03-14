@@ -21,7 +21,7 @@
 
   /* ── Labels ── */
   const CLICK_SEL  = '.project-media--carousel, .split-carousel, .panel-content';
-  const SCROLL_SEL = '.project-panel:not(.is-misc):not(.is-project)';
+  const SCROLL_SEL = '.project-panel:not(.is-misc):not(.is-project), .project-media--hscroll';
 
   document.addEventListener('mouseover', e => {
     if (e.target.closest(CLICK_SEL)) {
