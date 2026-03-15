@@ -34,9 +34,9 @@ html, body {
   align-items: baseline;
   justify-content: center;
   font-family: var(--font);
-  font-weight: 300;
-  font-size: clamp(28px, 5vw, 68px);
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-size: clamp(11px, 1.2vw, 14px);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg);
   white-space: nowrap;
@@ -46,7 +46,7 @@ html, body {
 #loader-text span:not(.space) {
   display: inline-block;
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(-14px);
 }
 
 /* space between SELECTED and WORKS — wide at start, collapses */
@@ -63,9 +63,9 @@ html, body {
   align-items: baseline;
   justify-content: center;
   font-family: var(--font);
-  font-weight: 300;
-  font-size: clamp(28px, 5vw, 68px);
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-size: clamp(11px, 1.2vw, 14px);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg);
   white-space: nowrap;
@@ -76,7 +76,7 @@ html, body {
 #loader-text-2 span:not(.space) {
   display: inline-block;
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(-14px);
 }
 
 #loader-text-2 .space {
@@ -87,10 +87,10 @@ html, body {
 /* full-width bar */
 #loader-bar-wrap {
   position: absolute;
-  top: 48px;
+  top: 76px;
   left: 0; right: 0;
   height: 1px;
-  background: var(--dim);
+  background: #fff;
 }
 
 #loader-line {

@@ -23,12 +23,12 @@
     spaceEl.style.width = Math.max(spread, 16) + 'px';
   }
 
-  setSpace(text1, space1, '3D+AIARTIST');
-  setSpace(text2, space2, 'SELECTEDWORKS');
+  setSpace(text1, space1, '3d+aiartist');
+  setSpace(text2, space2, 'selectedworks');
 
   window.addEventListener('resize', () => {
-    setSpace(text1, space1, '3D+AIARTIST');
-    setSpace(text2, space2, 'SELECTEDWORKS');
+    setSpace(text1, space1, '3d+aiartist');
+    setSpace(text2, space2, 'selectedworks');
   });
 
   /* ── estado inicial ── */
@@ -94,7 +94,7 @@
     /* shrink font */
     .to(text2, {
       fontSize: 'clamp(11px, 1vw, 14px)',
-      letterSpacing: '0.30em',
+      letterSpacing: '0.12em',
       duration: 0.45,
       ease: 'power2.inOut'
     }, '+=0.05')
