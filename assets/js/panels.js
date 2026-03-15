@@ -51,12 +51,22 @@
       initProjectCarousel(panel, splitCarousel, splitCarousel);
     }
 
+    /* ── iframes fuera de hscroll (split-video, etc.) ── */
+    panel.querySelectorAll('.project-media:not(.project-media--hscroll) iframe[data-src]').forEach(iframe => {
+      iframe.src = iframe.dataset.src;
+      iframe.removeAttribute('data-src');
+    });
+
     /* ── hscroll: init carousels dentro de cada sección ── */
     const hscrollTrack = panel.querySelector('.hscroll-track');
     if (hscrollTrack && hscrollTrack.dataset.lazyLoaded !== 'true') {
       hscrollTrack.querySelectorAll('img[data-src]').forEach(img => {
         img.src = img.dataset.src;
         img.removeAttribute('data-src');
+      });
+      hscrollTrack.querySelectorAll('iframe[data-src]').forEach(iframe => {
+        iframe.src = iframe.dataset.src;
+        iframe.removeAttribute('data-src');
       });
       hscrollTrack.dataset.lazyLoaded = 'true';
       hscrollTrack.querySelectorAll('.split-carousel').forEach(sc => {

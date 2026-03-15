@@ -720,3 +720,232 @@ html, body {
 iframe {
   border: none;
 }
+
+/* ══════════════════════════════════════ DESARIA — full-height media */
+
+#desaria-panel .hscroll-track {
+  padding: 0;
+  gap: 100px;
+}
+
+#desaria-panel .hscroll-section {
+  flex: 0 0 60vw;
+}
+
+#desaria-panel .desaria-section--sm {
+  flex: 0 0 500px;
+}
+
+#desaria-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+#desaria-panel .desaria-video {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+#desaria-panel .split-video-top .project-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+}
+
+#desaria-panel .split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════ CIELOAZUL — full-height media */
+
+#cieloazul-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#cieloazul-panel .hscroll-section {
+  flex: 0 0 80vw;
+}
+
+#cieloazul-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+#cieloazul-panel .split-video-top .project-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+}
+
+#cieloazul-panel .split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════ MARINESERRE — full-height media */
+
+#marineserre-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#marineserre-panel .hscroll-section {
+  flex: 0 0 100vw;
+}
+
+#marineserre-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+/* ══════════════════════════════════════ ANTU — full-height media */
+
+#antu-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#antu-panel .hscroll-section {
+  flex: 0 0 80vw;
+}
+
+#antu-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+#antu-panel .split-video-top .project-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+}
+
+#antu-panel .split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════ GINEBRA — full-height media */
+
+#ginebra-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#ginebra-panel .hscroll-section {
+  flex: 0 0 80vw;
+}
+
+#ginebra-panel .hscroll-section:first-child {
+  flex: 0 0 calc(80vw / 3);
+}
+
+#ginebra-panel .ginebra-video {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+/* ══════════════════════════════════════ RONPE1 — full-height media */
+
+#ronpe1-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#ronpe1-panel .hscroll-section {
+  flex: 0 0 80vw;
+}
+
+#ronpe1-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+#ronpe1-panel .split-video-top .project-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+}
+
+#ronpe1-panel .split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════ SIDRA 1888 — full-height media */
+
+#sidra1888-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#sidra1888-panel .hscroll-section {
+  flex: 0 0 80vw;
+}
+
+#sidra1888-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
+#sidra1888-panel .split-video-top .project-video-wrap {
+  width: 100%;
+  height: 100%;
+  max-width: unset;
+}
+
+#sidra1888-panel .split-video-top iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#sidra1888-panel .sidra-video {
+  height: 100%;
+  width: auto;
+  display: block;
+}
