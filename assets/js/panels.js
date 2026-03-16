@@ -68,6 +68,24 @@
         iframe.src = iframe.dataset.src;
         iframe.removeAttribute('data-src');
       });
+
+      /* ── stickySection dynamic iframes ── */
+      const stickySections = panel.querySelectorAll('[class*="stickySection_"]');
+      stickySections.forEach(section => {
+        const stickyClass  = [...section.classList].find(c => c.startsWith('stickySection_'));
+        const scrollClass  = stickyClass.replace('stickySection_', 'scroll_section_');
+        const scrollEl     = section.querySelector('.' + scrollClass);
+        if (!scrollEl || scrollEl.querySelector('iframe')) return;
+
+        const iframe = document.createElement('iframe');
+        iframe.src              = section.dataset.iframeSrc;
+        iframe.title            = section.dataset.iframeTitle || '';
+        iframe.frameBorder      = '0';
+        iframe.allow            = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen  = true;
+        iframe.id               = 'youtube';
+        scrollEl.appendChild(iframe);
+      });
       hscrollTrack.dataset.lazyLoaded = 'true';
       hscrollTrack.querySelectorAll('.split-carousel').forEach(sc => {
         if (sc.dataset.lazyLoaded !== 'true') {

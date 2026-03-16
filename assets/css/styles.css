@@ -799,6 +799,28 @@ iframe {
   display: block;
 }
 
+/* ══════════════════════════════════════ TRAIN — full-height media */
+
+#train-panel .hscroll-track {
+  padding: 0;
+  gap: 0;
+}
+
+#train-panel .hscroll-section {
+  flex: 0 0 100vw;
+}
+
+#train-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
+}
+
 /* ══════════════════════════════════════ MARINESERRE — full-height media */
 
 #marineserre-panel .hscroll-track {
