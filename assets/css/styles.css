@@ -46,7 +46,6 @@ html, body {
 #loader-text span:not(.space) {
   display: inline-block;
   opacity: 0;
-  transform: translateY(-14px);
 }
 
 /* space between SELECTED and WORKS — wide at start, collapses */
@@ -76,7 +75,6 @@ html, body {
 #loader-text-2 span:not(.space) {
   display: inline-block;
   opacity: 0;
-  transform: translateY(-14px);
 }
 
 #loader-text-2 .space {
@@ -769,7 +767,7 @@ iframe {
 
 #cieloazul-panel .hscroll-track {
   padding: 0;
-  gap: 0;
+  gap: 8vw;
 }
 
 #cieloazul-panel .hscroll-section {
@@ -796,6 +794,39 @@ iframe {
 #cieloazul-panel .split-video-top iframe {
   width: 100%;
   height: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════ AZIZ — spotify section */
+
+.aziz-spotify-section {
+  flex: 0 0 500px;
+}
+
+.aziz-spotify-section .hscroll-section__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.aziz-spotify-section iframe {
+  display: block;
+  width: 100%;
+}
+
+/* ══════════════════════════════════════ LAPERLA — video sizing */
+
+#guidobarbosch-panel .hscroll-track {
+  gap: 8vw;
+}
+
+
+#guidobarbosch-panel .split-video-top video {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
 }
 
@@ -851,7 +882,7 @@ iframe {
 }
 
 #antu-panel .hscroll-section {
-  flex: 0 0 80vw;
+  flex: 0 0 50vw;
 }
 
 #antu-panel .hscroll-section__main.split-carousel .carousel-img {
@@ -885,11 +916,11 @@ iframe {
 }
 
 #ginebra-panel .hscroll-section {
-  flex: 0 0 80vw;
+  flex: 0 0 40vw;
 }
 
 #ginebra-panel .hscroll-section:first-child {
-  flex: 0 0 calc(80vw / 3);
+  flex: 0 0 calc(40vw / 3);
 }
 
 #ginebra-panel .ginebra-video {
@@ -936,7 +967,7 @@ iframe {
 
 #sidra1888-panel .hscroll-track {
   padding: 0;
-  gap: 0;
+  gap: 8vw;
 }
 
 #sidra1888-panel .hscroll-section {
@@ -970,4 +1001,13 @@ iframe {
   height: 100%;
   width: auto;
   display: block;
+}
+
+/* ══════════════════════════════════════ SCROLL gap — multi-section panels */
+
+#antu-dg-panel .hscroll-track,
+#polvareda-panel .hscroll-track,
+#lacura-dg-panel .hscroll-track {
+  padding: 0;
+  gap: 8vw;
 }

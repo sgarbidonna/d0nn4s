@@ -40,7 +40,7 @@
 
   /* letras entran */
   gsap.to(letters1, {
-    opacity: 1, y: 0,
+    opacity: 1,
     stagger: 0.065,
     duration: 0.6,
     ease: 'power1.out'
@@ -73,7 +73,7 @@
     /* mostrar texto 2 y animar letras */
     .to(text2, { opacity: 1, duration: 0.01 })
     .to(letters2, {
-      opacity: 1, y: 0,
+      opacity: 1,
       stagger: 0.055,
       duration: 0.5,
       ease: 'power1.out'
@@ -83,7 +83,7 @@
     .to({}, { duration: 1.0 })
 
     /* colapsar space → gap normal */
-    .to(space2, { width: '0.35em', duration: 0.8, ease: 'power2.inOut' })
+    .to(space2, { width: '0.5em', duration: 0.8, ease: 'power2.inOut' })
 
     /* ocultar bar */
     .to(line, {
