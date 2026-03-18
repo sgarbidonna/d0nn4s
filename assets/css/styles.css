@@ -33,9 +33,9 @@ html, body {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  font-family: var(--font);
-  font-weight: 400;
-  font-size: clamp(11px, 1.2vw, 14px);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.4em;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg);
@@ -61,8 +61,8 @@ html, body {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  font-family: var(--font);
-  font-weight: 400;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
   font-size: clamp(11px, 1.2vw, 14px);
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -130,6 +130,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 1px;
+  position: relative; /* anchor the doodle */
 }
 
 /* gap between SELECTED WORKS and the category items */
@@ -169,12 +170,296 @@ html, body {
   transform: scaleX(1);
 }
 
-#contact-bio{
-   font-weight: 600;
-  font-size:1.4em;
-   letter-spacing: 0.12em;
-   line-height: 50px;
- font-family: Arial, Helvetica, sans-serif;
+#contact-bio {
+  font-weight: 600;
+  font-size: 1.4em;
+  letter-spacing: 0.12em;
+  line-height: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.doodle {
+  position: absolute;
+  inset: -32px -48px;
+  width: calc(100% + 96px);
+  height: calc(100% + 64px);
+  pointer-events: none;
+  opacity: 0;
+  color: currentColor;
+  overflow: visible;
+}
+
+/* ══════════════════════════════════════ CONTACT-BIO PANEL */
+#contact-bio-cv {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: transparent;
+  overflow: hidden;
+  pointer-events: none; /* nav links stay clickable through the panel */
+}
+
+#bio-folio-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+#bio-profile {
+  position: absolute;
+      bottom: 0;
+    left: -44px;
+    height: 61%;
+
+  width: auto;
+  object-fit: contain;
+  object-position: bottom left;
+  pointer-events: none;
+  transform: translateX(-6%) translateY(10%);
+  filter: grayscale(1);
+}
+
+#close-contactbio {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.1em;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* ── bio grid ── */
+#bio-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns:30% 35% 33%;
+  pointer-events: none;
+}
+
+/* LEFT column */
+#bio-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.bio-label {
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #000;
+  margin: 15px 100px;
+  margin: 0;
+}
+
+/* ── scattered icons area — same total width as #bio-profile ── */
+#bio-icons-area {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  width: 26vw;   /* matches approximate profile image width */
+  height: 42vw;  /* tall enough to contain the scatter */
+  pointer-events: none;
+}
+
+.bico {
+  position: absolute;
+  filter: grayscale(1);
+  object-fit: contain;
+}
+
+/* all icons same size */
+.bico { width: 11%; }
+
+/* positions */
+.bico-blender     { top:  4%; left: 14%; }
+.bico-unreal      { top:  4%; left: 39%; }
+.bico-daz         { top:  8%; left: 63%; }
+.bico-ae          { top: 12%; left: 28%; }
+.bico-comfy       { top: 21%; left: 16%; }
+.bico-effecthouse { top: 26%; left: 74%; }
+.bico-premiere    { top: 25%; left: 47%; }
+.bico-photoshop   { top: 33%; left: 33%; }
+
+/* social icons — absolute, beside the right edge of the profile image */
+#bio-social {
+  position: absolute;
+  bottom: 8%;
+  left: 29vw;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+#bio-social a {
+  display: flex;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  color: #000;
+  text-decoration: none;
+}
+
+#bio-social svg,
+#bio-social img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: grayscale(1);
+}
+
+/* reference overlay for manual icon placement */
+#bio-ref-overlay {
+  position: absolute;
+  top: 36px;
+  left: 19px;
+  width: 21vw;
+  height: 42vw;
+  object-fit: contain;
+  object-position: top left;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+
+#bio-dev {
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: #000;
+  margin: 53vh 18vw;
+  margin-top: auto;
+  inline-size: max-content;
+}
+
+/* CENTER column */
+#bio-center {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding-top: 57px;
+  justify-content: flex-start;
+}
+
+#bio-label-languages {
+  position: absolute;
+  top: 21vh;
+  right: 40vw;
+}
+
+#bio-label-softwares {
+  position: absolute;
+  top: 15vh;
+  left: 23vw;
+}
+
+#bio-skills-label {
+  position: absolute;
+  top: 35vh;
+  left: 41vw;
+}
+
+.lang-option {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 0.7em;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  color: var(--fg);
+  cursor: pointer;
+  pointer-events: auto;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+}
+
+/* underline — same as nav-links button::after */
+.lang-option::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.35s ease;
+}
+
+.lang-option:hover::after,
+.lang-option.active::after {
+  transform: scaleX(1);
+}
+
+/* RIGHT column */
+#bio-right {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 15px;
+  padding-top: 23px;
+  padding-left: 48px;
+  overflow-y: auto;
+  padding-bottom: 23px;
+}
+
+#bio-header-info {
+  text-align: right;
+}
+
+#bio-right {
+  padding-top: 17px;
+}
+
+#bio-header-info p {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #000;
+  margin: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+#bio-container {
+  flex: 1;
+}
+
+.bio-lang {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.bio-lang.active {
+  display: block;
+  opacity: 1;
+}
+
+.bio-lang p {
+  font-family: 'Azeret Mono', monospace;
+  font-size: .7rem;
+  line-height: 1.7;
+  text-align: justify;
+  color: #000;
+  margin: 0 0 0.9em 0;
+  font-weight: 300;
 }
 /* ══════════════════════════════════════ FLOATING IMAGES */
 .float-img {
@@ -1011,3 +1296,80 @@ iframe {
   padding: 0;
   gap: 8vw;
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE  ·  max-width: 768px
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── PRELOADER ──────────────────────────────────────────────────── */
+
+  #loader-text,
+  #loader-text-2 {
+    padding-left: 24px;
+    font-size: clamp(17px, 4.5vw, 21px); /* ~50% bigger than desktop 11–14px */
+  }
+
+  #loader-bar-wrap {
+    top: 84px; /* pushed down to clear the bigger text */
+  }
+
+
+  /* ── NAV ────────────────────────────────────────────────────────── */
+
+  #home {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 32px;
+    padding-left: 24px;
+  }
+
+
+  /* ── FLOAT IMAGES ───────────────────────────────────────────────── */
+
+  .float-img {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: calc(75% - 4px) !important;
+    height: auto !important;
+  }
+
+  .float-img img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  #site {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 100px 12px 32px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+
+  /* ── PANELS ─────────────────────────────────────────────────────── */
+
+  .project-panel {
+  }
+
+  .project-info {
+  }
+
+  .project-media {
+  }
+
+  .project-media--hscroll .hscroll-track {
+  }
+
+  .hscroll-section {
+  }
+
+}
+

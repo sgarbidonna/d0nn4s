@@ -19,7 +19,8 @@
     textEl.appendChild(probe);
     const lettersW = probe.offsetWidth;
     textEl.removeChild(probe);
-    const spread = window.innerWidth - lettersW - 104;
+    const padding = window.innerWidth <= 768 ? 48 : 104; /* 24px each side on mobile */
+    const spread = window.innerWidth - lettersW - padding;
     spaceEl.style.width = Math.max(spread, 16) + 'px';
   }
 
@@ -176,4 +177,138 @@
     });
   });
 
-})(); 
+})();
+
+
+/* ══════════════════════════════════════ CONTACT-BIO PANEL */
+(function () {
+
+  const openBtn  = document.getElementById('contact-bio');
+  const closeBtn = document.getElementById('close-contactbio');
+  const panel    = document.getElementById('contact-bio-cv');
+
+  if (!openBtn || !closeBtn || !panel) return;
+
+  /* pin at top-left corner — panel swings in like a sheet of paper */
+  gsap.set(panel, { transformOrigin: '0% 0%', rotation: -95 });
+
+  /* doodle stroke setup */
+  const doodle     = document.querySelector('.nav-links .doodle');
+  const doodlePath = doodle && doodle.querySelector('.doodle-path');
+  let pathLen = 0;
+  if (doodlePath) {
+    pathLen = doodlePath.getTotalLength();
+    gsap.set(doodlePath, { strokeDasharray: pathLen, strokeDashoffset: pathLen });
+  }
+
+  let isOpen = false;
+  let prevActiveButtons = [];
+
+  function openPanel() {
+    if (isOpen) return;
+    isOpen = true;
+    openBtn.classList.add('active');
+
+    /* close any open project panels */
+    if (window._panelCloseAll) window._panelCloseAll();
+
+    /* raise #home so nav stays above the folio background */
+    document.getElementById('home').style.zIndex = '410';
+
+    /* hide any currently visible float-imgs and remember them */
+    document.querySelectorAll('.float-img').forEach(el => {
+      if (parseFloat(gsap.getProperty(el, 'opacity')) > 0) {
+        el.dataset.wasVisible = '1';
+        gsap.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: 'power2.in' });
+      }
+    });
+
+    /* save active category buttons then deactivate them */
+    prevActiveButtons = [];
+    document.querySelectorAll('.nav-links button[data-section]:not(#contact-bio):not(#btn-selected-works)')
+      .forEach(btn => {
+        if (btn.classList.contains('active')) prevActiveButtons.push(btn);
+        btn.classList.remove('active');
+      });
+
+    /* paper swings open — pinned top-left, three-stage soft movement */
+    panel.classList.add('panel-open');
+    gsap.timeline({
+      onComplete() {
+        /* draw doodle circle when panel lands */
+        if (!doodle || !doodlePath) return;
+        gsap.set(doodlePath, { strokeDashoffset: pathLen });
+        gsap.set(doodle, { opacity: 1 });
+        gsap.to(doodlePath, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' });
+      }
+    })
+      .to(panel, { y: '-45%', x: '-18%', rotation: -104, duration: 0.7,  ease: 'sine.inOut' })
+      .to(panel, { y: '-18%', x:  '16%', rotation:   11, duration: 0.65, ease: 'sine.inOut' }, '-=0.3')
+      .to(panel, { y:   '0%', x:   '0%', rotation:    0, duration: 0.6,  ease: 'sine.out'   }, '-=0.3');
+  }
+
+  function closePanel() {
+    if (!isOpen) return;
+    isOpen = false;
+    openBtn.classList.remove('active');
+    panel.classList.remove('panel-open');
+
+    /* restore #home z-index */
+    document.getElementById('home').style.zIndex = '';
+
+    /* hide doodle immediately */
+    if (doodle) gsap.to(doodle, { opacity: 0, duration: 0.25 });
+
+    gsap.to(panel, {
+      y: '-120%', x: '6%', rotation: -10,
+      duration: 0.7, ease: 'power2.inOut',
+      onComplete() {
+        /* restore float-imgs that were visible */
+        document.querySelectorAll('.float-img[data-was-visible]').forEach(el => {
+          delete el.dataset.wasVisible;
+          gsap.fromTo(el,
+            { scale: 0, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
+          );
+        });
+        /* restore previously active category buttons */
+        prevActiveButtons.forEach(btn => btn.classList.add('active'));
+        prevActiveButtons = [];
+      }
+    });
+  }
+
+  openBtn.addEventListener('click', openPanel);
+  closeBtn.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+})();
+
+
+/* ══════════════════════════════════════ BIO LANGUAGE SWITCHER */
+(function () {
+
+  let currentLang = 'es';
+
+  function switchLanguage(lang) {
+    if (lang === currentLang) return;
+
+    const currentBio = document.querySelector(`.bio-lang[data-lang="${currentLang}"]`);
+    const nextBio    = document.querySelector(`.bio-lang[data-lang="${lang}"]`);
+    if (!currentBio || !nextBio) return;
+
+    currentBio.classList.remove('active');
+    setTimeout(() => nextBio.classList.add('active'), 80);
+
+    document.querySelectorAll('.lang-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    currentLang = lang;
+  }
+
+  document.querySelectorAll('.lang-option').forEach(btn => {
+    btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
+  });
+
+})();

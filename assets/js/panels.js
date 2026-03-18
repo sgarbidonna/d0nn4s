@@ -247,4 +247,7 @@
 
   document.querySelectorAll('.float-img[data-panel]').forEach(initPanel);
 
+  /* expose close-all for external use (e.g. contact-bio panel) */
+  window._panelCloseAll = () => { [...closeStack].forEach(fn => fn()); };
+
 })();
