@@ -291,6 +291,15 @@
     });
   }
 
+  /* expose close-without-restore for TAB cycle */
+  window._bioCloseNoRestore = function() {
+    prevActiveButtons = [];
+    document.querySelectorAll('.float-img[data-was-visible]').forEach(el => {
+      delete el.dataset.wasVisible;
+    });
+    closePanel();
+  };
+
   openBtn.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
@@ -373,4 +382,40 @@
   applyPageLang('es');
 
   btns.forEach(btn => btn.addEventListener('click', () => applyPageLang(btn.dataset.lang)));
+})();
+
+
+/* ── TAB key nav cycle ── */
+(function () {
+  // order: ai → 3d → vfx → graphic-design → contact-bio → close-all
+  const CAT_ORDER = ['ai', '3d', 'vfx', 'graphic-design'];
+  let step = 0;
+  // 0-3: category index, 4: contact-bio open, 5: close-all
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    e.preventDefault();
+
+    if (step < CAT_ORDER.length) {
+      /* deactivate any active category that isn't the one we're about to activate */
+      document.querySelectorAll('.nav-links button[data-section].active').forEach(b => {
+        if (b.dataset.section !== CAT_ORDER[step]) b.click();
+      });
+      /* activate next category */
+      const btn = document.querySelector(`.nav-links button[data-section="${CAT_ORDER[step]}"]`);
+      if (btn) { btn.disabled = false; btn.click(); }
+      step++;
+
+    } else if (step === CAT_ORDER.length) {
+      /* open contact-bio panel */
+      const contactBtn = document.getElementById('contact-bio');
+      if (contactBtn) contactBtn.click();
+      step++;
+
+    } else {
+      /* close everything — no state restored */
+      if (window._bioCloseNoRestore) window._bioCloseNoRestore();
+      step = 0;
+    }
+  });
 })();
