@@ -1,5 +1,7 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
 
+button { border: none; outline: none; }
+
 :root {
   --bg:   #ffffff;
   --fg:   #313131;
@@ -12,6 +14,7 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   overflow: hidden;
+  overscroll-behavior: none;
   font-family: var(--font);
   cursor: none;
 }
@@ -221,21 +224,19 @@ html, body {
   object-position: bottom left;
   pointer-events: none;
   transform: translateX(-6%) translateY(10%);
-  filter: grayscale(1);
 }
 
 #close-contactbio {
   position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 24px;
+  right: 14vw;
   background: none;
   border: none;
-  color: #000;
-  font-size: 1.2rem;
-  cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--fg);
   letter-spacing: 0.1em;
+  cursor: pointer;
   z-index: 2;
   pointer-events: auto;
 }
@@ -270,10 +271,10 @@ html, body {
 /* ── scattered icons area — same total width as #bio-profile ── */
 #bio-icons-area {
   position: absolute;
-  top: 36px;
-  left: 0;
-  width: 26vw;   /* matches approximate profile image width */
-  height: 42vw;  /* tall enough to contain the scatter */
+  top: 32px;
+  left: 26vw;
+  width: 26vw;
+  height: 42vw;
   pointer-events: none;
 }
 
@@ -343,8 +344,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  margin: 53vh 18vw;
-  margin-top: auto;
+  margin: 2vh 3vw;
   inline-size: max-content;
 }
 
@@ -366,7 +366,7 @@ html, body {
 
 #bio-label-softwares {
   position: absolute;
-  top: 15vh;
+  top: 24vh;
   left: 23vw;
 }
 
@@ -411,20 +411,15 @@ html, body {
 /* RIGHT column */
 #bio-right {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 15px;
-  padding-top: 23px;
-  padding-left: 48px;
+  padding: 120px 28px 23px 48px;
   overflow-y: auto;
-  padding-bottom: 23px;
 }
 
 #bio-header-info {
   text-align: right;
-}
-
-#bio-right {
-  padding-top: 17px;
+  flex-shrink: 0;
 }
 
 #bio-header-info p {
@@ -454,7 +449,7 @@ html, body {
 
 .bio-lang p {
   font-family: 'Azeret Mono', monospace;
-  font-size: .7rem;
+  font-size: .6rem;
   line-height: 1.7;
   text-align: justify;
   color: #000;
@@ -608,6 +603,10 @@ html, body {
   justify-content: flex-start;
   padding: 18px 28px 0;
   overflow: hidden;
+}
+
+.project-info__software {
+  padding: 55px 28px 0;
 }
 
 /* close dentro del espacio libre de project-info */
@@ -1106,6 +1105,10 @@ iframe {
   gap: 8vw;
 }
 
+#guidobarbosch-panel .proj-title {
+  font-size: clamp(10px, 1.1vw, 16px);
+}
+
 
 #guidobarbosch-panel .split-video-top video {
   height: 100%;
@@ -1113,6 +1116,19 @@ iframe {
   max-width: 100%;
   max-height: 100%;
   display: block;
+}
+
+/* ══════════════════════════════════════ SUERTE — full-height carousel */
+
+#suerte-panel .hscroll-section__main.split-carousel .carousel-img {
+  inset: auto;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: unset;
 }
 
 /* ══════════════════════════════════════ TRAIN — full-height media */
@@ -1298,78 +1314,100 @@ iframe {
 }
 
 
+/* ══════════════════════════════════════ PAGE LANGUAGE SWITCHER */
+
+#page-lang-switcher {
+  position: fixed;
+  top: 24px;
+  right: calc(2% + 28px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  padding-top: 2px;
+}
+
+.page-lang-btn {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.page-lang-btn.active {
+  opacity: 1;
+  font-weight: 700;
+}
+
+.page-lang-btn:hover {
+  opacity: 0.8;
+}
+
+.page-lang-sep {
+  font-family: var(--font);
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--fg);
+  opacity: 0.4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TABLET  ·  769px – 1024px
+   ══════════════════════════════════════════════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+  /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
+
+  html, body { overflow: hidden; touch-action: none; }
+
+  /* ── PRELOADER ──────────────────────────────────────────────────── */
+
+  /* ── NAV ────────────────────────────────────────────────────────── */
+
+  /* ── FLOAT IMAGES ───────────────────────────────────────────────── */
+
+  /* ── PANELS ─────────────────────────────────────────────────────── */
+
+  .panel-close { top: 46px; }
+
+  /* ── CONTACT / BIO ──────────────────────────────────────────────── */
+
+  /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
+
+}
+
+
 /* ══════════════════════════════════════════════════════════════════════
    MOBILE  ·  max-width: 768px
    ══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
+  /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
+
+  html, body { overflow: hidden; touch-action: none; }
+
   /* ── PRELOADER ──────────────────────────────────────────────────── */
-
-  #loader-text,
-  #loader-text-2 {
-    padding-left: 24px;
-    font-size: clamp(17px, 4.5vw, 21px); /* ~50% bigger than desktop 11–14px */
-  }
-
-  #loader-bar-wrap {
-    top: 84px; /* pushed down to clear the bigger text */
-  }
-
 
   /* ── NAV ────────────────────────────────────────────────────────── */
 
-  #home {
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-top: 32px;
-    padding-left: 24px;
-  }
-
-
   /* ── FLOAT IMAGES ───────────────────────────────────────────────── */
-
-  .float-img {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    width: calc(75% - 4px) !important;
-    height: auto !important;
-  }
-
-  .float-img img {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  #site {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 100px 12px 32px;
-    box-sizing: border-box;
-    overflow-y: auto;
-    height: 100%;
-  }
-
 
   /* ── PANELS ─────────────────────────────────────────────────────── */
 
-  .project-panel {
-  }
+  /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 
-  .project-info {
-  }
-
-  .project-media {
-  }
-
-  .project-media--hscroll .hscroll-track {
-  }
-
-  .hscroll-section {
-  }
+  /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
 
 }
 

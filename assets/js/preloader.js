@@ -137,7 +137,17 @@
       stagger: 0.09,
       duration: 0.35,
       ease: 'power2.out'
-    }, '-=0.22');
+    }, '-=0.22')
+
+    /* lang switcher appears after menu */
+    .to('#page-lang-switcher', {
+      opacity: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+      onComplete: () => {
+        document.getElementById('page-lang-switcher').style.pointerEvents = 'auto';
+      }
+    }, '+=0.1');
 
 })();
 
@@ -223,12 +233,13 @@
       }
     });
 
-    /* save active category buttons then deactivate them */
+    /* save active category buttons then deactivate and disable them */
     prevActiveButtons = [];
     document.querySelectorAll('.nav-links button[data-section]:not(#contact-bio):not(#btn-selected-works)')
       .forEach(btn => {
         if (btn.classList.contains('active')) prevActiveButtons.push(btn);
         btn.classList.remove('active');
+        btn.disabled = true;
       });
 
     /* paper swings open — pinned top-left, three-stage soft movement */
@@ -271,7 +282,9 @@
             { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
           );
         });
-        /* restore previously active category buttons */
+        /* re-enable and restore previously active category buttons */
+        document.querySelectorAll('.nav-links button[data-section]:not(#contact-bio):not(#btn-selected-works)')
+          .forEach(btn => { btn.disabled = false; });
         prevActiveButtons.forEach(btn => btn.classList.add('active'));
         prevActiveButtons = [];
       }
@@ -290,6 +303,8 @@
 
   let currentLang = 'es';
 
+  const langLabels = { en: 'LANGUAGES', es: 'IDIOMAS', fr: 'LANGUES', it: 'LINGUE' };
+
   function switchLanguage(lang) {
     if (lang === currentLang) return;
 
@@ -304,6 +319,9 @@
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
+    const label = document.getElementById('bio-label-languages');
+    if (label) label.textContent = langLabels[lang] || 'LANGUAGES';
+
     currentLang = lang;
   }
 
@@ -311,4 +329,48 @@
     btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
   });
 
+})();
+
+
+/* ── Page-wide ES / EN language switcher ── */
+(function () {
+  const btns = document.querySelectorAll('.page-lang-btn');
+  if (!btns.length) return;
+
+  function applyPageLang(lang) {
+    /* update switcher button states immediately */
+    btns.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
+
+    /* fade out translatable text, swap, fade in */
+    const transEls = Array.from(document.querySelectorAll('[data-es][data-en]'));
+    gsap.to(transEls, {
+      opacity: 0, duration: 0.15,
+      onComplete: () => {
+        transEls.forEach(el => {
+          el.innerHTML = el.dataset[lang] !== undefined ? el.dataset[lang] : el.dataset.es;
+        });
+        gsap.to(transEls, { opacity: 1, duration: 0.25 });
+      }
+    });
+
+    /* cross-fade bio text */
+    const curBio  = document.querySelector('.bio-lang.active');
+    const nextBio = document.querySelector(`.bio-lang[data-lang="${lang}"]`);
+    if (curBio && nextBio && curBio !== nextBio) {
+      gsap.to(curBio, {
+        opacity: 0, duration: 0.15,
+        onComplete: () => {
+          curBio.classList.remove('active');
+          nextBio.classList.add('active');
+          gsap.fromTo(nextBio, { opacity: 0 }, { opacity: 1, duration: 0.25 });
+        }
+      });
+    }
+
+  }
+
+  /* apply default on init */
+  applyPageLang('es');
+
+  btns.forEach(btn => btn.addEventListener('click', () => applyPageLang(btn.dataset.lang)));
 })();
