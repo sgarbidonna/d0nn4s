@@ -272,7 +272,7 @@ html, body {
 #bio-icons-area {
   position: absolute;
   top: 32px;
-  left: 26vw;
+  left: 18vw;
   width: 26vw;
   height: 42vw;
   pointer-events: none;
@@ -366,8 +366,9 @@ html, body {
 
 #bio-label-softwares {
   position: absolute;
-  top: 24vh;
-  left: 23vw;
+      top: 15vh;
+    left: 15vw;
+    opacity: 0;
 }
 
 #bio-skills-label {
@@ -413,7 +414,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  padding: 120px 28px 23px 48px;
+padding: 120px 0px 23px 48px;
   overflow-y: auto;
 }
 
@@ -1319,7 +1320,7 @@ iframe {
 #page-lang-switcher {
   position: fixed;
   top: 24px;
-  right: calc(2% + 28px);
+  right: 28px;
   display: flex;
   align-items: center;
   gap: 4px;
