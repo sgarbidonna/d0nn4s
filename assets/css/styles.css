@@ -66,7 +66,7 @@ html, body {
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
-  font-size: clamp(11px, 1.2vw, 14px);
+  font-size: 1.4em;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--fg);
@@ -256,6 +256,11 @@ html, body {
   flex-direction: column;
   gap: 24px;
   padding-top: 8px;
+  pointer-events: none;
+}
+
+#bio-dev, #bio-ui-sound, #bio-label-softwares {
+  pointer-events: auto;
 }
 
 .bio-label {
@@ -275,6 +280,11 @@ html, body {
   left: 18vw;
   width: 26vw;
   height: 42vw;
+  pointer-events: none;
+}
+
+.bico {
+  pointer-events: auto;
 }
 
 /* wrapper — carries position + tooltip */
@@ -313,14 +323,14 @@ html, body {
 }
 
 /* positions */
-.bico-blender     { top:  4%; left: 14%; }
-.bico-unreal      { top:  4%; left: 39%; }
+.bico-blender     { top:  2%; left: 14%; }
+.bico-unreal      { top:  2%; left: 39%; }
 .bico-daz         { top:  8%; left: 63%; }
 .bico-ae          { top: 12%; left: 28%; }
-.bico-comfy       { top: 21%; left: 16%; }
+.bico-comfy       { top: 23%; left: 16%; }
 .bico-effecthouse { top: 26%; left: 74%; }
-.bico-premiere    { top: 25%; left: 47%; }
-.bico-photoshop   { top: 33%; left: 33%; }
+.bico-premiere    { top: 17%; left: 47%; }
+.bico-photoshop   { top: 26%; left: 66%; }
 
 /* social icons — absolute, beside the right edge of the profile image */
 #bio-social {
@@ -350,6 +360,22 @@ html, body {
   filter: grayscale(1);
 }
 
+/* bico hover tooltip */
+#bico-tooltip {
+  position: fixed;
+  pointer-events: none;
+  font-family: var(--font);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 99999;
+  white-space: nowrap;
+}
+#bico-tooltip.visible { opacity: 1; }
+
 /* reference overlay for manual icon placement */
 #bio-ref-overlay {
   position: absolute;
@@ -364,13 +390,27 @@ html, body {
   z-index: 3;
 }
 
+#bio-ui-sound {
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: #000;
+  margin: 2vh 3vw 0.2vh;
+  inline-size: max-content;
+}
 #bio-dev {
   font-family: var(--font);
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  margin: 2vh 3vw;
+  margin: -18px 3vw 0;
   inline-size: max-content;
+}
+
+#bio-dev a, #bio-ui-sound a {
+  color: #000;
+  text-decoration: underline;
+  opacity: 0.6;
 }
 
 /* CENTER column */

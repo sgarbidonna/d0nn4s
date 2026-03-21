@@ -207,6 +207,7 @@
     function open() {
       if (isOpen) return;
       isOpen = true;
+      if (window._playPanelSound) window._playPanelSound();
       closeStack.push(closePanel);
 
       lazyLoad(panel, type);
@@ -224,6 +225,7 @@
     function closePanel() {
       if (!isOpen) return;
       isOpen = false;
+      if (window._playPanelSound) window._playPanelSound();
       const idx = closeStack.indexOf(closePanel);
       if (idx !== -1) closeStack.splice(idx, 1);
 

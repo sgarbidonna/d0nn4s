@@ -217,6 +217,7 @@
   function openPanel() {
     if (isOpen) return;
     isOpen = true;
+    if (window._playPanelSound) window._playPanelSound();
     openBtn.classList.add('active');
 
     /* close any open project panels */
@@ -261,6 +262,7 @@
   function closePanel() {
     if (!isOpen) return;
     isOpen = false;
+    if (window._playPanelSound) window._playPanelSound();
     openBtn.classList.remove('active');
     panel.classList.remove('panel-open');
 
@@ -418,4 +420,99 @@
       step = 0;
     }
   });
+})();
+
+/* ══════════════════════════════════════ NAV SOUND UI */
+(function () {
+  /* swap path once you have the file */
+  const SOUND_SRC = './assets/sounds/nav-click.mpeg';
+
+  const audio = new Audio(SOUND_SRC);
+  audio.preload = 'auto';
+  audio.volume = 0.6;
+
+  function playNavSound() {
+    audio.currentTime = 0;
+    audio.play().catch(() => { /* autoplay policy — silently ignore */ });
+  }
+
+  window._playNavSound = playNavSound;
+
+  document.querySelectorAll('.nav-links button').forEach(btn => {
+    btn.addEventListener('click', playNavSound);
+  });
+})();
+
+/* ══════════════════════════════════════ PANEL OPEN/CLOSE SOUND */
+(function () {
+  const SOUND_SRC = './assets/sounds/panel-open.mpeg';
+
+  const audio = new Audio(SOUND_SRC);
+  audio.preload = 'auto';
+  audio.volume = 0.6;
+
+  window._playPanelSound = function () {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  };
+})();
+
+/* ══════════════════════════════════════ FLOAT-IMG HOVER SOUND */
+(function () {
+  /* same file as nav click — pitched via Web Audio API */
+  const SOUND_SRC = './assets/sounds/nav-click.mpeg';
+  const SEMITONES = [-26, -18, -6];
+  let modeIndex  = 0;
+
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  let buffer = null;
+
+  fetch(SOUND_SRC)
+    .then(r  => r.arrayBuffer())
+    .then(ab => ctx.decodeAudioData(ab))
+    .then(buf => { buffer = buf; })
+    .catch(() => {});
+
+  function playHoverSound() {
+    if (!buffer) return;
+    if (ctx.state === 'suspended') ctx.resume();
+
+    const gain   = ctx.createGain();
+    gain.gain.value = 0.5;
+    gain.connect(ctx.destination);
+
+    const source = ctx.createBufferSource();
+    source.buffer       = buffer;
+    source.playbackRate.value = Math.pow(2, SEMITONES[modeIndex] / 12);
+    source.connect(gain);
+    source.start(0);
+
+    modeIndex = (modeIndex + 1) % SEMITONES.length;
+  }
+
+  document.querySelectorAll('.float-img').forEach(el => {
+    el.addEventListener('mouseenter', playHoverSound);
+  });
+})();
+
+/* ══════════════════════════════════════ BICO TOOLTIP */
+(function () {
+  const tip = document.createElement('div');
+  tip.id = 'bico-tooltip';
+  document.body.appendChild(tip);
+
+  document.querySelectorAll('.bico').forEach(img => {
+    img.addEventListener('mouseenter', e => {
+      tip.textContent = img.alt;
+      tip.classList.add('visible');
+      moveTip(e);
+    });
+    img.addEventListener('mousemove', moveTip);
+    img.addEventListener('mouseleave', () => tip.classList.remove('visible'));
+  });
+
+  function moveTip(e) {
+    tip.style.left = (e.clientX + 14) + 'px';
+    tip.style.top  = (e.clientY - 24) + 'px';
+  }
 })();
