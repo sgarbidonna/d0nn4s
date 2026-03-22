@@ -212,8 +212,8 @@
 
       lazyLoad(panel, type);
 
-      /* activar scroll horizontal cuando el panel ya es visible */
-      if (panel.querySelector('.hscroll-track') && window.HScroll) {
+      /* activar scroll horizontal cuando el panel ya es visible (desktop only) */
+      if (panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
         gsap.delayedCall(1.15, () => HScroll.enable(panelId));
       }
 
@@ -235,8 +235,8 @@
         gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });
       }
 
-      /* reset suave del scroll horizontal antes de cerrar */
-      if (panel.querySelector('.hscroll-track') && window.HScroll) {
+      /* reset suave del scroll horizontal antes de cerrar (desktop only) */
+      if (panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
         HScroll.resetToStart(panelId, animateClose);
       } else {
         animateClose();

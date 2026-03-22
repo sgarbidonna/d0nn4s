@@ -5,6 +5,7 @@
   const instances = {};
 
   function enable(panelId) {
+    if (window.innerWidth <= 768) return;
     if (instances[panelId]) return;
 
     const panel     = document.getElementById(panelId);

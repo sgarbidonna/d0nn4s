@@ -502,6 +502,8 @@
   document.querySelectorAll('.float-img').forEach(el => {
     el.addEventListener('mouseenter', playHoverSound);
   });
+
+  window._playHoverSound = playHoverSound;
 })();
 
 /* ══════════════════════════════════════ BICO TOOLTIP */
@@ -602,6 +604,7 @@
       if (Math.abs(diff) < 40) return;
       if (diff > 0) currentIndex = (currentIndex + 1) % items.length;
       else          currentIndex = (currentIndex - 1 + items.length) % items.length;
+      if (window._playHoverSound) window._playHoverSound();
       render(true);
     }, { passive: true });
 
