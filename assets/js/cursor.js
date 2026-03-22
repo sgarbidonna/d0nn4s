@@ -2,6 +2,8 @@
 
 (function () {
 
+  if (window.innerWidth <= 768) return;
+
   const el = document.createElement('div');
   el.id = 'cursor';
   el.innerHTML = '<div class="cursor-dot"></div><span class="cursor-label"></span>';

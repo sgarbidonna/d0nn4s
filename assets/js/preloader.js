@@ -167,15 +167,24 @@
     btn.addEventListener('click', () => {
 
       const isActive = btn.classList.contains('active');
+
+      /* deactivate all other category buttons */
+      categories.forEach(other => {
+        if (other === cat) return;
+        const otherBtn = document.querySelector(`.nav-links button[data-section="${other}"]`);
+        if (otherBtn && otherBtn.classList.contains('active')) {
+          otherBtn.classList.remove('active');
+          document.querySelectorAll(`.float-img[data-category="${other}"]`).forEach(el => {
+            gsap.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: 'power2.in' });
+          });
+        }
+      });
+
       btn.classList.toggle('active');
 
       targets.forEach(el => {
         if (isActive) {
-          gsap.to(el, {
-            scale: 0, opacity: 0,
-            duration: 0.35,
-            ease: 'power2.in'
-          });
+          gsap.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: 'power2.in' });
         } else {
           gsap.fromTo(el,
             { scale: 0, opacity: 0 },
@@ -515,4 +524,89 @@
     tip.style.left = (e.clientX + 14) + 'px';
     tip.style.top  = (e.clientY - 24) + 'px';
   }
+})();
+
+/* ══════════════════════════════════════ MOBILE CATEGORY CAROUSELS */
+(function () {
+  if (window.innerWidth > 768) return;
+
+  const ITEM_GAP  = 110;
+  const CATS      = ['ai', '3d', 'vfx', 'graphic-design'];
+  const registry  = {}; /* category → { show, hide } */
+
+  function makeCarousel(category) {
+    const floats = Array.from(document.querySelectorAll(`.float-img[data-category="${category}"]`));
+    if (!floats.length) return null;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'mob-cat-carousel';
+    wrap.id = `mob-${category}-carousel`;
+    document.body.appendChild(wrap);
+
+    let currentIndex = 0;
+
+    const items = floats.map(floatImg => {
+      const el = document.createElement('div');
+      el.className = 'mob-car-item';
+      el.appendChild(floatImg.querySelector('img').cloneNode(true));
+      el.dataset.panel = floatImg.dataset.panel;
+      wrap.appendChild(el);
+      el.addEventListener('click', () => floatImg.click());
+      return el;
+    });
+
+    function render(animated) {
+      const len     = items.length;
+      const centerY = wrap.offsetHeight / 2;
+      items.forEach((el, i) => {
+        const raw    = i - currentIndex;
+        const off    = ((raw + len + Math.floor(len / 2)) % len) - Math.floor(len / 2);
+        const absOff = Math.abs(off);
+        const y      = centerY + off * ITEM_GAP - el.offsetHeight / 2;
+        const scale   = absOff === 0 ? 1  : absOff === 1 ? 0.72 : 0.48;
+        const opacity = absOff === 0 ? 1  : absOff === 1 ? 0.38 : absOff === 2 ? 0.12 : 0;
+        const zIndex  = absOff === 0 ? 10 : absOff === 1 ? 5    : 1;
+        if (animated) gsap.to(el,  { y, scale, opacity, zIndex, duration: 0.45, ease: 'power3.out' });
+        else          gsap.set(el, { y, scale, opacity, zIndex });
+      });
+    }
+
+    function show() {
+      /* hide every other carousel first */
+      CATS.forEach(cat => { if (cat !== category && registry[cat]) registry[cat].hide(); });
+      currentIndex = 0;
+      render(false);
+      wrap.classList.add('is-visible');
+    }
+
+    function hide() {
+      wrap.classList.remove('is-visible');
+    }
+
+    /* nav button toggle */
+    const btn = document.querySelector(`.nav-links button[data-section="${category}"]`);
+    if (btn) {
+      btn.addEventListener('click', () => {
+        setTimeout(() => { if (btn.classList.contains('active')) show(); else hide(); }, 0);
+      });
+      new MutationObserver(() => {
+        if (!btn.classList.contains('active')) hide();
+      }).observe(btn, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    /* swipe up / down */
+    let startY = 0;
+    wrap.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    wrap.addEventListener('touchend',   e => {
+      const diff = startY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) < 40) return;
+      if (diff > 0) currentIndex = (currentIndex + 1) % items.length;
+      else          currentIndex = (currentIndex - 1 + items.length) % items.length;
+      render(true);
+    }, { passive: true });
+
+    return { show, hide };
+  }
+
+  CATS.forEach(cat => { registry[cat] = makeCarousel(cat); });
 })();

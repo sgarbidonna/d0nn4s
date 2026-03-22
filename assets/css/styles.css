@@ -168,7 +168,6 @@ html, body {
   transition: transform 0.35s ease;
 }
 
-.nav-links button:hover::after,
 .nav-links button.active::after {
   transform: scaleX(1);
 }
@@ -1460,15 +1459,72 @@ iframe {
    ══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
+  /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
+
+  #page-lang-switcher { left: 28px; right: unset; }
+
   /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
 
   html, body { overflow: hidden; touch-action: none; }
 
   /* ── PRELOADER ──────────────────────────────────────────────────── */
 
+  #loader-text, #loader-text-2 { top: unset; bottom: 56px; }
+  #loader-bar-wrap              { top: unset; bottom: 40px; }
+
   /* ── NAV ────────────────────────────────────────────────────────── */
 
+  #home { justify-content: flex-end; padding-bottom: 36px; }
+
   /* ── FLOAT IMAGES ───────────────────────────────────────────────── */
+
+  /* confine float-imgs to top 40% — nav lives at vertical center */
+  #site { overflow: hidden; height: 40vh; }
+  .float-img { width: 30% !important; }
+
+  /* all category float-imgs hidden on mobile — carousels take over */
+  .float-img[data-category="ai"],
+  .float-img[data-category="3d"],
+  .float-img[data-category="vfx"],
+  .float-img[data-category="graphic-design"] { opacity: 0 !important; pointer-events: none !important; }
+
+  /* ── MOBILE CATEGORY CAROUSELS ───────────────────────────────────── */
+
+  .mob-cat-carousel {
+    position: fixed;
+    top: 0;
+    bottom: 150px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+    transition: opacity 0.3s ease;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
+    mask-image:         linear-gradient(to bottom, transparent 0%, black 22%, black 78%, transparent 100%);
+  }
+
+  .mob-cat-carousel.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mob-car-item {
+    position: absolute;
+    left: calc(50% - 38vw);
+    top: 0;
+    width: 76vw;
+    cursor: pointer;
+  }
+
+  .mob-car-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
 
   /* ── PANELS ─────────────────────────────────────────────────────── */
 
