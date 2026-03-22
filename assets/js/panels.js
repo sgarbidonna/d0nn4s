@@ -212,6 +212,14 @@
 
       lazyLoad(panel, type);
 
+      /* measure project-info height → CSS var for media sizing (mobile) */
+      if (window.innerWidth <= 768) {
+        const info = panel.querySelector('.project-info');
+        if (info) requestAnimationFrame(() => {
+          document.documentElement.style.setProperty('--info-height', info.offsetHeight + 'px');
+        });
+      }
+
       /* activar scroll horizontal cuando el panel ya es visible (desktop only) */
       if (panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
         gsap.delayedCall(1.15, () => HScroll.enable(panelId));

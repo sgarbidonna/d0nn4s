@@ -1380,6 +1380,11 @@ iframe {
 }
 
 
+
+/* ══════════════════════════════════════ TAP LABEL */
+
+.tap-label { display: none; }
+
 /* ══════════════════════════════════════ PAGE LANGUAGE SWITCHER */
 
 #page-lang-switcher {
@@ -1463,6 +1468,21 @@ iframe {
 
   #page-lang-switcher { left: 28px; right: unset; }
 
+  /* ── TAP LABEL ───────────────────────────────────────────────────── */
+
+  .tap-label {
+    display: block;
+    position: absolute;
+    top: -30px;
+    right: 17px;
+    font-family: var(--font);
+    font-size: 0.71em;
+    color: var(--fg);
+    opacity: 1;
+    pointer-events: none;
+    z-index: 5;
+  }
+
   /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
 
   html, body { overflow: hidden; touch-action: none; }
@@ -1520,6 +1540,7 @@ iframe {
     cursor: pointer;
   }
 
+
   .mob-car-item img {
     width: 100%;
     height: auto;
@@ -1531,8 +1552,14 @@ iframe {
   /* panel is full-screen flex column; overflow hidden keeps info in view */
   .project-panel.is-project { overflow: hidden; }
 
-  /* media fills all space above the info bar */
-  .project-media { order: unset; flex: 1; height: auto; min-height: 0; }
+  /* media fills exactly the space above the fixed info bar */
+  .project-media {
+    order: unset;
+    flex: 1;
+    height: calc(100dvh - var(--info-height, 160px));
+    max-height: calc(100dvh - var(--info-height, 160px));
+    min-height: 0;
+  }
 
   /* info bar fixed at bottom — always visible */
   .project-info {
@@ -1569,6 +1596,7 @@ iframe {
   /* prevent title text from running under the close button */
   .project-info__title { padding-right: 36px; }
 
+
   /* ── VIDEO IFRAMES — width-first ────────────────────────────────── */
 
   .project-media--video .project-video-wrap,
@@ -1588,6 +1616,58 @@ iframe {
   /* hscroll sections with video */
   .hscroll-section__main { align-items: flex-end !important; }
   .split-video-top { align-items: flex-end !important; height: auto !important; }
+
+  /* ── SPLIT PANELS → VERTICAL SCROLL ─────────────────────────────── */
+
+  .project-media--split {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    align-items: stretch !important;
+    padding-bottom: 180px !important;
+  }
+
+  /* carousel half → full width block with defined height for abs children */
+  .split-carousel {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: 75vw !important;
+  }
+
+  /* video half → width-first */
+  .split-video {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .split-video .project-video-wrap {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    aspect-ratio: 16 / 9;
+  }
+
+  .split-video iframe {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+
+  /* vertical-split variant */
+  .split-video-vertical {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+  }
+
+  .split-video-vertical .video-top { height: auto !important; }
+
+  .split-video-vertical .video-top .project-video-wrap {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+  }
 
   /* ── HSCROLL → VERTICAL SCROLL ──────────────────────────────────── */
 

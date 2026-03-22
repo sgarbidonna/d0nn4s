@@ -471,7 +471,6 @@
   /* same file as nav click — pitched via Web Audio API */
   const SOUND_SRC = './assets/sounds/nav-click.mpeg';
   const SEMITONES = [-26, -18, -6];
-  let modeIndex  = 0;
 
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   let buffer = null;
@@ -492,11 +491,9 @@
 
     const source = ctx.createBufferSource();
     source.buffer       = buffer;
-    source.playbackRate.value = Math.pow(2, SEMITONES[modeIndex] / 12);
+    source.playbackRate.value = Math.pow(2, SEMITONES[Math.floor(Math.random() * SEMITONES.length)] / 12);
     source.connect(gain);
     source.start(0);
-
-    modeIndex = (modeIndex + 1) % SEMITONES.length;
   }
 
   document.querySelectorAll('.float-img').forEach(el => {
@@ -596,17 +593,18 @@
       }).observe(btn, { attributes: true, attributeFilter: ['class'] });
     }
 
-    /* swipe up / down */
-    let startY = 0;
-    wrap.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
-    wrap.addEventListener('touchend',   e => {
-      const diff = startY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) < 40) return;
-      if (diff > 0) currentIndex = (currentIndex + 1) % items.length;
-      else          currentIndex = (currentIndex - 1 + items.length) % items.length;
+    /* scroll up / down */
+    let scrollCooldown = false;
+    wrap.addEventListener('wheel', e => {
+      e.preventDefault();
+      if (scrollCooldown) return;
+      scrollCooldown = true;
+      setTimeout(() => { scrollCooldown = false; }, 400);
+      if (e.deltaY > 0) currentIndex = (currentIndex + 1) % items.length;
+      else              currentIndex = (currentIndex - 1 + items.length) % items.length;
       if (window._playHoverSound) window._playHoverSound();
       render(true);
-    }, { passive: true });
+    }, { passive: false });
 
     return { show, hide };
   }
