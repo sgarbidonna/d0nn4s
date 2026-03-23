@@ -593,18 +593,17 @@
       }).observe(btn, { attributes: true, attributeFilter: ['class'] });
     }
 
-    /* scroll up / down */
-    let scrollCooldown = false;
-    wrap.addEventListener('wheel', e => {
-      e.preventDefault();
-      if (scrollCooldown) return;
-      scrollCooldown = true;
-      setTimeout(() => { scrollCooldown = false; }, 400);
-      if (e.deltaY > 0) currentIndex = (currentIndex + 1) % items.length;
-      else              currentIndex = (currentIndex - 1 + items.length) % items.length;
+    /* swipe up / down */
+    let startY = 0;
+    wrap.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    wrap.addEventListener('touchend', e => {
+      const diff = startY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) < 40) return;
+      if (diff > 0) currentIndex = (currentIndex + 1) % items.length;
+      else          currentIndex = (currentIndex - 1 + items.length) % items.length;
       if (window._playHoverSound) window._playHoverSound();
       render(true);
-    }, { passive: false });
+    }, { passive: true });
 
     return { show, hide };
   }
