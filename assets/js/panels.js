@@ -161,6 +161,88 @@
     gsap.set(images[0], { opacity: 1 });
     images.slice(1).forEach(img => gsap.set(img, { opacity: 0 }));
 
+    /* ── Mobile filmstrip ── */
+    /* filmSlots: array of {el, srcIdx} — enough slots to cover 3x viewport */
+    let filmSlots = [];
+
+    function renderFilmstrip(animated) {
+      if (!filmSlots.length) return;
+      const sw   = window.innerWidth;
+      const tw   = 52;
+      const cx   = sw / 2 - 25;
+      const total = filmSlots.length;
+      /* center slot index in filmSlots array */
+      const centerSlot = Math.floor(total / 2);
+      filmSlots.forEach(({ el, srcIdx }, si) => {
+        /* offset of this slot from the one that holds the active image */
+        const slotOff = si - centerSlot;
+        const x = cx + slotOff * tw;
+        const isActive = srcIdx === current;
+        if (!animated) gsap.set(el, { x });
+        else           gsap.to(el,  { x, duration: 0.35, ease: 'power2.out' });
+        el.classList.toggle('is-active', isActive);
+      });
+    }
+
+    function shiftFilmstrip() {
+      /* rotate filmSlots so the active image is always at centerSlot */
+      if (!filmSlots.length) return;
+      const total      = filmSlots.length;
+      const centerSlot = Math.floor(total / 2);
+      /* find which slot currently has current image */
+      const curPos = filmSlots.findIndex(s => s.srcIdx === current);
+      if (curPos === -1) return;
+      /* rotate array so curPos → centerSlot */
+      const rot = curPos - centerSlot;
+      if (rot === 0) return;
+      if (rot > 0) {
+        for (let k = 0; k < rot; k++) filmSlots.push(filmSlots.shift());
+      } else {
+        for (let k = 0; k < -rot; k++) filmSlots.unshift(filmSlots.pop());
+      }
+      /* update src on shifted slots to maintain looping sequence */
+      filmSlots.forEach((s, si) => {
+        const newSrcIdx = ((centerSlot - (Math.floor(total/2) - si) % images.length) + images.length * 100) % images.length;
+        s.srcIdx = (((si - centerSlot) % images.length) + images.length * 100) % images.length;
+        s.el.src = images[s.srcIdx].getAttribute('src') || images[s.srcIdx].dataset.src || '';
+        s.el.classList.toggle('is-active', s.srcIdx === current);
+      });
+    }
+
+    if (window.innerWidth <= 768) {
+      const sw    = window.innerWidth;
+      const tw    = 52;
+      const slots = Math.max(images.length, Math.ceil(sw / tw) + 4);
+      const strip = document.createElement('div');
+      strip.className = 'carousel-filmstrip';
+
+      for (let si = 0; si < slots; si++) {
+        const srcIdx = si % images.length;
+        const img    = images[srcIdx];
+        const el     = document.createElement('img');
+        el.src       = img.getAttribute('src') || img.dataset.src || '';
+        el.loading   = 'eager';
+        strip.appendChild(el);
+        filmSlots.push({ el, srcIdx });
+      }
+
+      /* rotate so active image (current=0) is at centerSlot */
+      const centerSlot = Math.floor(slots / 2);
+      const rot = 0 - centerSlot; /* current=0 is at slot 0, move to centerSlot */
+      if (rot < 0) {
+        for (let k = 0; k < -rot; k++) filmSlots.unshift(filmSlots.pop());
+      }
+      /* update srcIdx after rotation */
+      filmSlots.forEach((s, si) => {
+        s.srcIdx = ((si - centerSlot) % images.length + images.length * 100) % images.length;
+        s.el.src = images[s.srcIdx].getAttribute('src') || images[s.srcIdx].dataset.src || '';
+        s.el.classList.toggle('is-active', s.srcIdx === current);
+      });
+
+      container.parentElement.appendChild(strip);
+      requestAnimationFrame(() => renderFilmstrip(false));
+    }
+
     function show(i) {
       if (animating || i === current) return;
       animating = true;
@@ -172,6 +254,30 @@
       });
       images[i].classList.add('is-active');
       current = i;
+      /* update filmstrip: rotate slots so active srcIdx is at center, then render */
+      if (filmSlots.length) {
+        const total      = filmSlots.length;
+        const centerSlot = Math.floor(total / 2);
+        /* find the slot closest to center that has the current srcIdx */
+        let best = -1, bestDist = Infinity;
+        filmSlots.forEach((s, si) => {
+          if (s.srcIdx === current) {
+            const d = Math.abs(si - centerSlot);
+            if (d < bestDist) { bestDist = d; best = si; }
+          }
+        });
+        if (best !== -1 && best !== centerSlot) {
+          const rot = best - centerSlot;
+          if (rot > 0) for (let k = 0; k < rot; k++) filmSlots.push(filmSlots.shift());
+          else         for (let k = 0; k < -rot; k++) filmSlots.unshift(filmSlots.pop());
+          /* reassign srcIdx after rotation */
+          filmSlots.forEach((s, si) => {
+            s.srcIdx = ((current + (si - centerSlot)) % images.length + images.length * 100) % images.length;
+            s.el.src = images[s.srcIdx].getAttribute('src') || images[s.srcIdx].dataset.src || '';
+          });
+        }
+        renderFilmstrip(true);
+      }
     }
 
     if (!clickTarget) return;
@@ -179,6 +285,7 @@
 
     clickTarget.addEventListener('click', e => {
       if (e.target.closest('.panel-close')) return;
+      if (e.target.closest('.carousel-filmstrip')) return;
       const { left, width } = clickTarget.getBoundingClientRect();
       const goNext = e.clientX > left + width / 2;
       const next = goNext

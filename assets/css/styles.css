@@ -1367,9 +1367,6 @@ iframe {
 
 
 
-/* ══════════════════════════════════════ TAP LABEL */
-
-.tap-label { display: none; }
 
 /* ══════════════════════════════════════ PAGE LANGUAGE SWITCHER */
 
@@ -1454,20 +1451,47 @@ iframe {
 
   #page-lang-switcher { left: 28px; right: unset; }
 
-  /* ── TAP LABEL ───────────────────────────────────────────────────── */
+  /* ── CAROUSEL FILMSTRIP ─────────────────────────────────────────── */
 
-  .tap-label {
-    display: block;
-    position: absolute;
-    top: -30px;
-    right: 17px;
-    font-family: var(--font);
-    font-size: 0.71em;
-    color: var(--fg);
-    opacity: 1;
-    pointer-events: none;
-    z-index: 5;
+  .project-media--carousel {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
   }
+
+  .project-media--carousel .project-carousel {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .project-media--carousel .carousel-filmstrip {
+    order: 2;
+    margin-top: auto;
+  }
+
+  .carousel-filmstrip {
+    width: 100%;
+    height: 50px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .carousel-filmstrip img {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50px;
+    object-fit: cover;
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+  }
+
+  .carousel-filmstrip img.is-active {
+    opacity: 1;
+  }
+
+
 
   /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
 
