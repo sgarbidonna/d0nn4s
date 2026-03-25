@@ -166,19 +166,27 @@
 
     btn.addEventListener('click', () => {
 
+      /* if bio panel is open: close without restoring state, activate only this category */
+      const contactBioBtn = document.getElementById('contact-bio');
+      if (contactBioBtn && contactBioBtn.classList.contains('active')) {
+        if (window._bioCloseNoRestore) window._bioCloseNoRestore();
+      }
+
       const isActive = btn.classList.contains('active');
 
-      /* deactivate all other category buttons */
-      categories.forEach(other => {
-        if (other === cat) return;
-        const otherBtn = document.querySelector(`.nav-links button[data-section="${other}"]`);
-        if (otherBtn && otherBtn.classList.contains('active')) {
-          otherBtn.classList.remove('active');
-          document.querySelectorAll(`.float-img[data-category="${other}"]`).forEach(el => {
-            gsap.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: 'power2.in' });
-          });
-        }
-      });
+      /* on mobile: deactivate all other category buttons (one active at a time) */
+      if (window.innerWidth <= 768) {
+        categories.forEach(other => {
+          if (other === cat) return;
+          const otherBtn = document.querySelector(`.nav-links button[data-section="${other}"]`);
+          if (otherBtn && otherBtn.classList.contains('active')) {
+            otherBtn.classList.remove('active');
+            document.querySelectorAll(`.float-img[data-category="${other}"]`).forEach(el => {
+              gsap.to(el, { scale: 0, opacity: 0, duration: 0.35, ease: 'power2.in' });
+            });
+          }
+        });
+      }
 
       btn.classList.toggle('active');
 
@@ -243,13 +251,12 @@
       }
     });
 
-    /* save active category buttons then deactivate and disable them */
+    /* save active category buttons then deactivate them */
     prevActiveButtons = [];
     document.querySelectorAll('.nav-links button[data-section]:not(#contact-bio):not(#btn-selected-works)')
       .forEach(btn => {
         if (btn.classList.contains('active')) prevActiveButtons.push(btn);
         btn.classList.remove('active');
-        btn.disabled = true;
       });
 
     /* paper swings open — pinned top-left, three-stage soft movement */
@@ -293,9 +300,7 @@
             { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
           );
         });
-        /* re-enable and restore previously active category buttons */
-        document.querySelectorAll('.nav-links button[data-section]:not(#contact-bio):not(#btn-selected-works)')
-          .forEach(btn => { btn.disabled = false; });
+        /* restore previously active category buttons */
         prevActiveButtons.forEach(btn => btn.classList.add('active'));
         prevActiveButtons = [];
       }
@@ -311,7 +316,7 @@
     closePanel();
   };
 
-  openBtn.addEventListener('click', openPanel);
+  openBtn.addEventListener('click', () => { isOpen ? closePanel() : openPanel(); });
   closeBtn.addEventListener('click', closePanel);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
 
@@ -503,27 +508,6 @@
   window._playHoverSound = playHoverSound;
 })();
 
-/* ══════════════════════════════════════ BICO TOOLTIP */
-(function () {
-  const tip = document.createElement('div');
-  tip.id = 'bico-tooltip';
-  document.body.appendChild(tip);
-
-  document.querySelectorAll('.bico').forEach(img => {
-    img.addEventListener('mouseenter', e => {
-      tip.textContent = img.alt;
-      tip.classList.add('visible');
-      moveTip(e);
-    });
-    img.addEventListener('mousemove', moveTip);
-    img.addEventListener('mouseleave', () => tip.classList.remove('visible'));
-  });
-
-  function moveTip(e) {
-    tip.style.left = (e.clientX + 14) + 'px';
-    tip.style.top  = (e.clientY - 24) + 'px';
-  }
-})();
 
 /* ══════════════════════════════════════ MOBILE CATEGORY CAROUSELS */
 (function () {

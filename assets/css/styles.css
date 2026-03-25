@@ -168,7 +168,8 @@ html, body {
   transition: transform 0.35s ease;
 }
 
-.nav-links button.active::after {
+.nav-links button.active::after,
+.nav-links button:hover::after {
   transform: scaleX(1);
 }
 
@@ -359,21 +360,6 @@ html, body {
   filter: grayscale(1);
 }
 
-/* bico hover tooltip */
-#bico-tooltip {
-  position: fixed;
-  pointer-events: none;
-  font-family: var(--font);
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg);
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  z-index: 99999;
-  white-space: nowrap;
-}
-#bico-tooltip.visible { opacity: 1; }
 
 /* reference overlay for manual icon placement */
 #bio-ref-overlay {
