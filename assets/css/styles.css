@@ -748,6 +748,7 @@ padding: 120px 0px 23px 48px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  /* padding-top: 200px !important; */
 }
 
 /* variante: video con aire lateral, alto completo */
@@ -835,6 +836,7 @@ padding: 120px 0px 23px 48px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding-top: 33px;
 }
 
 .split-video .project-video-wrap {
@@ -1453,6 +1455,20 @@ iframe {
 
   /* ── CAROUSEL FILMSTRIP ─────────────────────────────────────────── */
 
+  /* misc panel: column so filmstrip sits below images */
+  .project-panel.is-misc {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+  }
+
+  .project-panel.is-misc .panel-content {
+    flex: 1;
+    min-height: 0;
+    width: 100% !important;
+    height: auto !important;
+  }
+
   .project-media--carousel {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -1635,7 +1651,8 @@ iframe {
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
     align-items: stretch !important;
-    padding-bottom: 180px !important;
+    /* padding-bottom: 180px !important; */
+    padding-top: 250px !important;
   }
 
   /* carousel half → full width block with defined height for abs children */

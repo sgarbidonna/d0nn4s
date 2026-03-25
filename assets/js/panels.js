@@ -108,6 +108,7 @@
 
     let current   = 0;
     let animating = false;
+    let filmSlots = [];
 
     /* todas apiladas, invisibles */
     images.forEach(img => {
@@ -116,6 +117,58 @@
 
     /* mostrar primera */
     gsap.set(images[0], { opacity: 1 });
+
+    function renderFilmstrip(animated) {
+      if (!filmSlots.length) return;
+      const sw         = window.innerWidth;
+      const tw         = 52;
+      const cx         = sw / 2 - 25;
+      const centerSlot = Math.floor(filmSlots.length / 2);
+      filmSlots.forEach(({ el, srcIdx }, si) => {
+        const x        = cx + (si - centerSlot) * tw;
+        const isActive = srcIdx === current;
+        if (!animated) gsap.set(el, { x });
+        else           gsap.to(el,  { x, duration: 0.35, ease: 'power2.out' });
+        el.classList.toggle('is-active', isActive);
+      });
+    }
+
+    if (window.innerWidth <= 768) {
+      const sw    = window.innerWidth;
+      const tw    = 52;
+      const slots = Math.ceil(sw / tw) + 4;
+      const strip = document.createElement('div');
+      strip.className = 'carousel-filmstrip';
+
+      for (let si = 0; si < slots; si++) {
+        const srcIdx = si % images.length;
+        const el     = document.createElement('img');
+        el.src       = images[srcIdx].getAttribute('src') || images[srcIdx].dataset.src || '';
+        el.loading   = 'eager';
+        strip.appendChild(el);
+        filmSlots.push({ el, srcIdx });
+      }
+
+      const centerSlot = Math.floor(slots / 2);
+      if (centerSlot > 0) {
+        for (let k = 0; k < centerSlot; k++) filmSlots.unshift(filmSlots.pop());
+      }
+      filmSlots.forEach((s, si) => {
+        s.srcIdx = ((si - centerSlot) % images.length + images.length * 100) % images.length;
+        s.el.src = images[s.srcIdx].getAttribute('src') || images[s.srcIdx].dataset.src || '';
+        s.el.classList.toggle('is-active', s.srcIdx === current);
+      });
+
+      content.insertAdjacentElement('afterend', strip);
+      requestAnimationFrame(() => renderFilmstrip(false));
+
+      strip.addEventListener('click', e => {
+        const clickedEl = e.target.closest('img');
+        if (!clickedEl) return;
+        const slot = filmSlots.find(s => s.el === clickedEl);
+        if (slot) show(slot.srcIdx);
+      });
+    }
 
     function show(i) {
       if (animating || i === current) return;
@@ -128,6 +181,27 @@
       });
 
       current = i;
+
+      if (filmSlots.length) {
+        const centerSlot = Math.floor(filmSlots.length / 2);
+        let best = -1, bestDist = Infinity;
+        filmSlots.forEach((s, si) => {
+          if (s.srcIdx === current) {
+            const d = Math.abs(si - centerSlot);
+            if (d < bestDist) { bestDist = d; best = si; }
+          }
+        });
+        if (best !== -1 && best !== centerSlot) {
+          const rot = best - centerSlot;
+          if (rot > 0) for (let k = 0; k < rot; k++) filmSlots.push(filmSlots.shift());
+          else         for (let k = 0; k < -rot; k++) filmSlots.unshift(filmSlots.pop());
+          filmSlots.forEach((s, si) => {
+            s.srcIdx = ((current + (si - centerSlot)) % images.length + images.length * 100) % images.length;
+            s.el.src = images[s.srcIdx].getAttribute('src') || images[s.srcIdx].dataset.src || '';
+          });
+        }
+        renderFilmstrip(true);
+      }
     }
 
     /* pointer-events propio para no depender del padre */
@@ -135,6 +209,7 @@
 
     content.addEventListener('click', e => {
       if (e.target.closest('.panel-close')) return;
+      if (e.target.closest('.carousel-filmstrip')) return;
 
       const { left, width } = content.getBoundingClientRect();
       const goNext = e.clientX > left + width / 2;
@@ -145,6 +220,20 @@
 
       show(next);
     });
+
+    /* swipe on mobile */
+    let touchStartX = 0;
+    content.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    content.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 40) return;
+      const next = dx < 0
+        ? (current + 1) % images.length
+        : (current - 1 + images.length) % images.length;
+      show(next);
+    }, { passive: true });
   }
 
   /* ── Carousel dentro de is-project / split ──
@@ -239,8 +328,15 @@
         s.el.classList.toggle('is-active', s.srcIdx === current);
       });
 
-      container.parentElement.appendChild(strip);
+      container.insertAdjacentElement('afterend', strip);
       requestAnimationFrame(() => renderFilmstrip(false));
+
+      strip.addEventListener('click', e => {
+        const clickedEl = e.target.closest('img');
+        if (!clickedEl) return;
+        const slot = filmSlots.find(s => s.el === clickedEl);
+        if (slot) show(slot.srcIdx);
+      });
     }
 
     function show(i) {
