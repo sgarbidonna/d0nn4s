@@ -389,6 +389,20 @@
         : (current - 1 + images.length) % images.length;
       show(next);
     });
+
+    /* swipe on mobile */
+    let touchStartX = 0;
+    clickTarget.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    clickTarget.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 40) return;
+      const next = dx < 0
+        ? (current + 1) % images.length
+        : (current - 1 + images.length) % images.length;
+      show(next);
+    }, { passive: true });
   }
 
   /* ── Panel factory ── */
