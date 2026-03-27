@@ -117,6 +117,7 @@
 
     /* mostrar primera */
     gsap.set(images[0], { opacity: 1 });
+    images[0].classList.add('is-visible');
 
     function renderFilmstrip(animated) {
       if (!filmSlots.length) return;
@@ -174,11 +175,13 @@
       if (animating || i === current) return;
       animating = true;
 
+      images[current].classList.remove('is-visible');
       gsap.to(images[current], { opacity: 0, duration: 0.35, ease: 'power1.out' });
       gsap.to(images[i], {
         opacity: 1, duration: 0.35, ease: 'power1.in',
         onComplete: () => { animating = false; }
       });
+      images[i].classList.add('is-visible');
 
       current = i;
 
@@ -552,18 +555,90 @@
     floatImg.addEventListener('click', open);
     closeBtn.addEventListener('click', closePanel);
 
-    /* ── Panel-level swipe → navigate between projects ── */
+    /* ── Panel-level swipe → navigate / close ── */
     let panelTouchX = 0;
+    let panelTouchY = 0;
+    let zoomScale   = 1;   /* shared with zoom handler below */
+
     panel.addEventListener('touchstart', e => {
-      panelTouchX = e.touches[0].clientX;
+      if (e.touches.length === 1) {
+        panelTouchX = e.touches[0].clientX;
+        panelTouchY = e.touches[0].clientY;
+      }
     }, { passive: true });
     panel.addEventListener('touchend', e => {
       if (!entry.isOpen) return;
-      /* ignore swipes that originated inside image/carousel/filmstrip/info areas */
+      if (zoomScale > 1) return;
+      const t  = e.changedTouches[0];
+      const dx = t.clientX - panelTouchX;
+      const dy = t.clientY - panelTouchY;
+
+      /* diagonal swipe down (LONG) → close panel
+         requires: clearly downward (>120px), clearly diagonal (|dx|>40px),
+         and not so vertical it looks like scroll (dy < 4×|dx|)          */
+      if (dy > 120 && Math.abs(dx) > 40 && dy < Math.abs(dx) * 4) {
+        closePanel();
+        return;
+      }
+
+      /* horizontal swipe → navigate between projects */
       if (e.target.closest('.project-carousel, .split-carousel, .hscroll-track, .carousel-filmstrip, .project-info, .panel-close, #panel-nav')) return;
-      const dx = e.changedTouches[0].clientX - panelTouchX;
       if (Math.abs(dx) < 50) return;
       navigatePanel(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    /* ── Pinch-to-zoom on images ── */
+    let zoomEl       = null;
+    let zoomStart    = 1;
+    let zoomDist     = 0;
+    let zoomLastTap  = 0;
+    let zoomPinching = false;
+
+    function dist2(ta, tb) {
+      return Math.hypot(tb.clientX - ta.clientX, tb.clientY - ta.clientY);
+    }
+
+    function applyZoom(el, s) {
+      gsap.set(el, { scale: s, transformOrigin: 'center center', zIndex: s > 1 ? 5 : 'auto' });
+    }
+
+    function resetZoom() {
+      if (zoomEl) { applyZoom(zoomEl, 1); zoomEl = null; }
+      zoomScale = 1;
+    }
+
+    panel.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        const img = e.touches[0].target.closest('.panel-img, .carousel-img')
+                 || e.touches[1].target.closest('.panel-img, .carousel-img');
+        if (!img) return;
+        if (zoomEl && zoomEl !== img) resetZoom();
+        zoomEl       = img;
+        zoomPinching = true;
+        zoomDist     = dist2(e.touches[0], e.touches[1]);
+        zoomStart    = zoomScale;
+      } else if (e.touches.length === 1) {
+        const img = e.target.closest('.panel-img, .carousel-img');
+        if (!img || zoomScale <= 1) return;
+        /* double-tap resets zoom */
+        const now = Date.now();
+        if (now - zoomLastTap < 300) resetZoom();
+        zoomLastTap = now;
+      }
+    }, { passive: true });
+
+    panel.addEventListener('touchmove', e => {
+      if (!zoomPinching || e.touches.length !== 2 || !zoomEl) return;
+      e.preventDefault();
+      zoomScale = Math.max(1, Math.min(4, zoomStart * dist2(e.touches[0], e.touches[1]) / zoomDist));
+      applyZoom(zoomEl, zoomScale);
+    }, { passive: false });
+
+    panel.addEventListener('touchend', e => {
+      if (zoomPinching && e.touches.length < 2) {
+        zoomPinching = false;
+        if (zoomScale < 1.1) resetZoom();
+      }
     }, { passive: true });
   }
 

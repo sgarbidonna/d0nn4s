@@ -755,7 +755,7 @@ padding: 120px 0px 23px 48px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-top: 200px !important;
+  padding-top: 100px !important;
 }
 
 /* variante: video con aire lateral, alto completo */
@@ -800,6 +800,11 @@ padding: 120px 0px 23px 48px;
 
 .carousel-img.is-active {
   opacity: 1;
+  pointer-events: auto;
+}
+
+.panel-img.is-visible {
+  pointer-events: auto;
 }
 /* ══════════════════════════════════════ PANEL — SPLIT (carousel + video) */
 
@@ -891,8 +896,10 @@ padding: 120px 0px 23px 48px;
 .split-video-vertical .video-bottom {
   flex: 0 0 152px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  flex-direction: column;
+  min-height: 450px;
   overflow: hidden;
 }
 
@@ -1046,8 +1053,10 @@ padding: 120px 0px 23px 48px;
   flex: 0 0 152px;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  flex-direction: column;
+  min-height: 450px;
   padding: 12px 0;
 }
 
@@ -1150,9 +1159,11 @@ iframe {
 
 .aziz-spotify-section .hscroll-section__main {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   padding: 0 40px;
+  min-height: 450px;
+  flex-direction: column;
 }
 
 .aziz-spotify-section iframe {
