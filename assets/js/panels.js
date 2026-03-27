@@ -582,7 +582,7 @@
       }
 
       /* horizontal swipe → navigate between projects */
-      if (e.target.closest('.project-carousel, .split-carousel, .hscroll-track, .carousel-filmstrip, .project-info, .panel-close, #panel-nav')) return;
+      if (e.target.closest('.project-carousel, .split-carousel, .hscroll-track, .carousel-filmstrip, .project-info, .panel-close, #panel-nav, .panel-img, .carousel-img')) return;
       if (Math.abs(dx) < 50) return;
       navigatePanel(dx < 0 ? 1 : -1);
     }, { passive: true });

@@ -1788,6 +1788,76 @@ iframe {
 
   /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 
+  #contact-bio-cv {
+    overflow-y: auto;
+    overflow-x: hidden;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 64px 24px 80px;
+    gap: 28px;
+  }
+
+  #bio-folio-bg { position: fixed; object-position: center top; }
+  #bio-ref-overlay { display: none; }
+
+  #bio-profile {
+    position: static;
+    order: 1;
+    width: 60%;
+    height: auto;
+    transform: none;
+    align-self: center;
+  }
+
+  #bio-social {
+    position: static;
+    order: 2;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  #bio-icons-area {
+    position: static;
+    order: 3;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 8px 0;
+  }
+
+  .bico-wrap {
+    position: static;
+    width: 36px;
+  }
+
+  #bio-grid {
+    position: static;
+    order: 4;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 24px;
+  }
+
+  #bio-center  { display: none; }
+  #bio-right   { order: 1; }
+  #bio-left    { order: 2; gap: 12px; padding-top: 0; }
+
+  #bio-label-softwares { display: none; }
+  #bio-header-info     { text-align: left; }
+
+  #close-contactbio {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+  }
+
   /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
 
 }
