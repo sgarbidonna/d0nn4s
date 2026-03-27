@@ -622,6 +622,13 @@ padding: 120px 0px 23px 48px;
   height: 100vh;
 }
 
+/* project-info hidden on desktop for misc panels */
+@media (min-width: 769px) {
+  .project-panel.is-misc .project-info {
+    display: none;
+  }
+}
+
 /* cada imagen del carousel */
 .panel-img {
   position: absolute;
@@ -748,7 +755,7 @@ padding: 120px 0px 23px 48px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* padding-top: 200px !important; */
+  padding-top: 200px !important;
 }
 
 /* variante: video con aire lateral, alto completo */
@@ -1418,6 +1425,47 @@ iframe {
   opacity: 0.4;
 }
 
+/* ══════════════════════════════════════ PANEL NAVIGATION ARROWS */
+
+#panel-nav {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  padding-top: 2px;
+  transition: opacity 0.25s ease;
+}
+
+#panel-nav.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel-nav-btn {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.panel-nav-btn:hover {
+  opacity: 1;
+}
+
 /* ══════════════════════════════════════════════════════════════════════
    TABLET  ·  769px – 1024px
    ══════════════════════════════════════════════════════════════════════ */
@@ -1452,10 +1500,11 @@ iframe {
   /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
 
   #page-lang-switcher { left: 28px; right: unset; }
+  #panel-nav { left: auto; right: 28px; }
 
   /* ── CAROUSEL FILMSTRIP ─────────────────────────────────────────── */
 
-  /* misc panel: column so filmstrip sits below images */
+  /* misc panel: column so filmstrip + project-info sit below images */
   .project-panel.is-misc {
     flex-direction: column !important;
     align-items: stretch !important;
@@ -1468,6 +1517,11 @@ iframe {
     width: 100% !important;
     height: auto !important;
   }
+
+  .project-panel.is-misc {
+    padding-bottom: var(--info-height, 100px);
+  }
+
 
   .project-media--carousel {
     flex-direction: column !important;
@@ -1710,8 +1764,8 @@ iframe {
     flex-direction: column !important;
     height: auto !important;
     width: 100% !important;
-    padding: 8px 4vw 180px !important;
-    gap: 16px !important;
+    /* padding: 8px 4vw 88px !important; */
+    gap: 160px !important;
     transform: none !important;
   }
 

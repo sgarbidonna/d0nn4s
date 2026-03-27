@@ -405,31 +405,106 @@
     }, { passive: true });
   }
 
+  /* ── Panel navigation element (created once, moved into each active panel) ── */
+  const panelNavEl = document.createElement('div');
+  panelNavEl.id = 'panel-nav';
+  panelNavEl.innerHTML =
+    '<button class="panel-nav-btn" id="panel-nav-prev">&lt;</button>' +
+    '<span class="page-lang-sep">/</span>' +
+    '<button class="panel-nav-btn" id="panel-nav-next">&gt;</button>';
+
+  /* ── Panel registry & navigation ── */
+  const panelRegistry = [];
+  let   currentOpenIdx = null;
+  let   isNavigating   = false;
+
+  function navigatePanel(dir) {
+    if (currentOpenIdx === null || isNavigating) return;
+    isNavigating = true;
+
+    const fromIdx   = currentOpenIdx;
+    const toIdx     = (currentOpenIdx + dir + panelRegistry.length) % panelRegistry.length;
+    const fromEntry = panelRegistry[fromIdx];
+    const toEntry   = panelRegistry[toIdx];
+
+    /* update state — bypass normal open/close guards */
+    fromEntry.setOpen(false);
+    toEntry.setOpen(true);
+    currentOpenIdx = toIdx;
+
+    /* closeStack */
+    const si = closeStack.indexOf(fromEntry.closeFn);
+    if (si !== -1) closeStack.splice(si, 1);
+    closeStack.push(toEntry.closeFn);
+
+    if (window._playPanelSound) window._playPanelSound();
+
+    /* disable hscroll on departing panel */
+    if (fromEntry.panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
+      HScroll.disable(fromEntry.panelId);
+    }
+
+    /* lazy-load arriving panel */
+    lazyLoad(toEntry.panel, toEntry.type);
+    if (window.innerWidth <= 768) {
+      const info = toEntry.panel.querySelector('.project-info');
+      if (info) requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--info-height', info.offsetHeight + 'px');
+      });
+    }
+    if (toEntry.panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
+      gsap.delayedCall(1.0, () => HScroll.enable(toEntry.panelId));
+    }
+
+    /* move nav arrows into arriving panel */
+    toEntry.panel.appendChild(panelNavEl);
+
+    /* direction: next (dir>0) → from exits left, to enters from right
+                  prev (dir<0) → from exits right, to enters from left */
+    const exitX  = dir > 0 ? '-100%' : '100%';
+    const enterX = dir > 0 ?  '100%' : '-100%';
+
+    /* bg: snap arriving bg into place immediately (it's behind the panel) */
+    gsap.set(toEntry.bg,   { y: '0%', pointerEvents: 'auto' });
+    gsap.set(toEntry.panel, { x: enterX, y: '0%' });
+
+    /* animate panels: departing slides horizontally out, arriving slides in */
+    gsap.timeline({ onComplete: () => { isNavigating = false; } })
+      .to(fromEntry.panel, { x: exitX,  duration: 0.55, ease: 'power3.inOut', pointerEvents: 'none' }, 0)
+      .to(fromEntry.bg,    { y: '100%', duration: 0.55, ease: 'power3.inOut', pointerEvents: 'none' }, 0)
+      .to(toEntry.panel,   { x: '0%',  duration: 0.55, ease: 'power3.inOut', pointerEvents: 'auto' }, 0)
+      .set(fromEntry.panel, { x: '0%', y: '100%' }); /* reset from-panel for future use */
+  }
+
   /* ── Panel factory ── */
   function initPanel(floatImg) {
-    const panelId = floatImg.dataset.panel;
+    const panelId  = floatImg.dataset.panel;
     if (!panelId) return;
 
-    const panel = document.getElementById(panelId);
-    const bg    = document.getElementById(panelId.replace('-panel', '-bg'));
-    const close = panel ? panel.querySelector('.panel-close') : null;
-    const type  = floatImg.dataset.type || null;
+    const panel    = document.getElementById(panelId);
+    const bg       = document.getElementById(panelId.replace('-panel', '-bg'));
+    const closeBtn = panel ? panel.querySelector('.panel-close') : null;
+    const type     = floatImg.dataset.type || null;
 
-    if (!panel || !bg || !close) return;
+    if (!panel || !bg || !closeBtn) return;
 
-    let isOpen = false;
+    const registryIdx = panelRegistry.length;
+    const entry = { panel, bg, panelId, type, isOpen: false, closeFn: null, setOpen: null };
+    panelRegistry.push(entry);
+
+    entry.setOpen = (v) => { entry.isOpen = v; };
 
     gsap.set([panel, bg], { y: '100%', pointerEvents: 'none' });
 
     function open() {
-      if (isOpen) return;
-      isOpen = true;
+      if (entry.isOpen) return;
+      entry.setOpen(true);
+      currentOpenIdx = registryIdx;
       if (window._playPanelSound) window._playPanelSound();
       closeStack.push(closePanel);
 
       lazyLoad(panel, type);
 
-      /* measure project-info height → CSS var for media sizing (mobile) */
       if (window.innerWidth <= 768) {
         const info = panel.querySelector('.project-info');
         if (info) requestAnimationFrame(() => {
@@ -437,10 +512,13 @@
         });
       }
 
-      /* activar scroll horizontal cuando el panel ya es visible (desktop only) */
       if (panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
         gsap.delayedCall(1.15, () => HScroll.enable(panelId));
       }
+
+      /* move nav arrows into this panel */
+      panel.appendChild(panelNavEl);
+      panelNavEl.classList.add('is-open');
 
       gsap.timeline()
         .to(bg,    { y: '0%', duration: 0.48, ease: 'power2.out', pointerEvents: 'auto' })
@@ -448,8 +526,10 @@
     }
 
     function closePanel() {
-      if (!isOpen) return;
-      isOpen = false;
+      if (!entry.isOpen) return;
+      entry.setOpen(false);
+      if (currentOpenIdx === registryIdx) currentOpenIdx = null;
+      panelNavEl.classList.remove('is-open');
       if (window._playPanelSound) window._playPanelSound();
       const idx = closeStack.indexOf(closePanel);
       if (idx !== -1) closeStack.splice(idx, 1);
@@ -460,7 +540,6 @@
         gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });
       }
 
-      /* reset suave del scroll horizontal antes de cerrar (desktop only) */
       if (panel.querySelector('.hscroll-track') && window.HScroll && window.innerWidth > 768) {
         HScroll.resetToStart(panelId, animateClose);
       } else {
@@ -468,13 +547,33 @@
       }
     }
 
+    entry.closeFn = closePanel;
+
     floatImg.addEventListener('click', open);
-    close.addEventListener('click',   closePanel);
+    closeBtn.addEventListener('click', closePanel);
+
+    /* ── Panel-level swipe → navigate between projects ── */
+    let panelTouchX = 0;
+    panel.addEventListener('touchstart', e => {
+      panelTouchX = e.touches[0].clientX;
+    }, { passive: true });
+    panel.addEventListener('touchend', e => {
+      if (!entry.isOpen) return;
+      /* ignore swipes that originated inside image/carousel/filmstrip/info areas */
+      if (e.target.closest('.project-carousel, .split-carousel, .hscroll-track, .carousel-filmstrip, .project-info, .panel-close, #panel-nav')) return;
+      const dx = e.changedTouches[0].clientX - panelTouchX;
+      if (Math.abs(dx) < 50) return;
+      navigatePanel(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 
   document.querySelectorAll('.float-img[data-panel]').forEach(initPanel);
 
   /* expose close-all for external use (e.g. contact-bio panel) */
   window._panelCloseAll = () => { [...closeStack].forEach(fn => fn()); };
+
+  /* ── Wire navigation arrows ── */
+  panelNavEl.querySelector('#panel-nav-prev').addEventListener('click', () => navigatePanel(-1));
+  panelNavEl.querySelector('#panel-nav-next').addEventListener('click', () => navigatePanel(1));
 
 })();
