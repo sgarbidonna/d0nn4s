@@ -1846,6 +1846,11 @@ iframe {
     width: 36px;
   }
 
+  .bico-wrap::after,
+  .bico-wrap:hover::after {
+    display: none;
+  }
+
   #bio-grid {
     position: static;
     order: 2;
