@@ -380,7 +380,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  margin: 2vh 3vw 0.2vh;
+  /* margin: 2vh 3vw 0.2vh; */
   inline-size: max-content;
 }
 #bio-dev {
@@ -388,7 +388,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  margin: -18px 3vw 0;
+  /* margin: -18px 3vw 0; */
   inline-size: max-content;
 }
 
@@ -464,8 +464,12 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-padding: 120px 0px 23px 48px;
+  /* padding: 12px 0px 23px 48px; */
   overflow-y: auto;
+  padding-top: 350px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 15px;
 }
 
 #bio-header-info {
@@ -1788,6 +1792,8 @@ iframe {
 
   /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 
+  .doodle { display: none !important; }
+
   #contact-bio-cv {
     overflow-y: auto;
     overflow-x: hidden;
@@ -1795,40 +1801,44 @@ iframe {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 64px 24px 80px;
+    /* padding: 64px 24px 80px; */
     gap: 28px;
+    margin-bottom: 200px;
   }
 
   #bio-folio-bg { position: fixed; object-position: center top; }
   #bio-ref-overlay { display: none; }
 
   #bio-profile {
-    position: static;
-    order: 1;
-    width: 60%;
+    position: absolute;
+    top: 62px;
+    left: -33px;
+    width: 55%;
     height: auto;
     transform: none;
-    align-self: center;
   }
 
   #bio-social {
-    position: static;
-    order: 2;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
+    position: absolute;
+    top: 120px;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: flex-start;
+    left: 200px;
   }
 
   #bio-icons-area {
-    position: static;
-    order: 3;
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-wrap: wrap;
+    /* display: none; */
+    position: absolute;
+    display: grid;
+    gap: 12px;
+    left: 140px;
+    grid-auto-flow: column;
     justify-content: center;
-    gap: 20px;
-    padding: 8px 0;
+    align-items: center;
+    top: 220px;
+    align-content: center;
+    justify-items: center;
   }
 
   .bico-wrap {
@@ -1838,7 +1848,7 @@ iframe {
 
   #bio-grid {
     position: static;
-    order: 4;
+    order: 2;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -1847,7 +1857,14 @@ iframe {
 
   #bio-center  { display: none; }
   #bio-right   { order: 1; }
-  #bio-left    { order: 2; gap: 12px; padding-top: 0; }
+  #bio-left {
+    order: 2;
+    gap: 33px;
+    padding-top: 0;
+    flex-direction: row;
+    padding: 0px 50px;
+    padding-bottom: 15px;
+  }
 
   #bio-label-softwares { display: none; }
   #bio-header-info     { text-align: left; }
