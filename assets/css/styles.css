@@ -200,7 +200,6 @@ html, body {
   background: transparent;
   overflow: hidden;
   pointer-events: none; /* nav links stay clickable through the panel */
-  transform: translate(0%, 150%);
 }
 
 #bio-folio-bg {
@@ -1802,6 +1801,7 @@ iframe {
     /* padding: 64px 24px 80px; */
     gap: 28px;
     margin-bottom: 200px;
+    /* transform: translate(0%, 150%); */
   }
 
   #bio-folio-bg { position: fixed; object-position: center top; }
