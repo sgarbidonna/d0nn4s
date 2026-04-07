@@ -216,8 +216,12 @@
 
   if (!openBtn || !closeBtn || !panel) return;
 
-  /* pin at top-left corner — panel swings in like a sheet of paper */
-  gsap.set(panel, { transformOrigin: '0% 0%', rotation: -95 });
+  /* pin at top-left corner — panel swings in like a sheet of paper (desktop only) */
+  if (window.innerWidth > 768) {
+    gsap.set(panel, { transformOrigin: '0% 0%', rotation: -95 });
+  } else {
+    gsap.set(panel, { y: '150%', x: '0%', rotation: 0, transformOrigin: '0% 0%' });
+  }
 
   /* doodle stroke setup */
   const doodle     = document.querySelector('.nav-links .doodle');
@@ -261,6 +265,10 @@
 
     /* paper swings open — pinned top-left, three-stage soft movement */
     panel.classList.add('panel-open');
+    if (window.innerWidth <= 768) {
+      gsap.set(panel, { y: '150%', x: '0%', rotation: 0 });
+      gsap.to(panel, { y: '0%', duration: 0.6, ease: 'power3.out', pointerEvents: 'auto' });
+    } else {
     gsap.timeline({
       onComplete() {
         /* draw doodle circle when panel lands */
@@ -273,6 +281,7 @@
       .to(panel, { y: '-45%', x: '-18%', rotation: -104, duration: 0.7,  ease: 'sine.inOut' })
       .to(panel, { y: '-18%', x:  '16%', rotation:   11, duration: 0.65, ease: 'sine.inOut' }, '-=0.3')
       .to(panel, { y:   '0%', x:   '0%', rotation:    0, duration: 0.6,  ease: 'sine.out'   }, '-=0.3');
+    }
   }
 
   function closePanel() {
@@ -288,23 +297,29 @@
     /* hide doodle immediately */
     if (doodle) gsap.to(doodle, { opacity: 0, duration: 0.25 });
 
-    gsap.to(panel, {
-      y: '-120%', x: '6%', rotation: -10,
-      duration: 0.7, ease: 'power2.inOut',
-      onComplete() {
-        /* restore float-imgs that were visible */
-        document.querySelectorAll('.float-img[data-was-visible]').forEach(el => {
-          delete el.dataset.wasVisible;
-          gsap.fromTo(el,
-            { scale: 0, opacity: 0 },
-            { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
-          );
-        });
-        /* restore previously active category buttons */
-        prevActiveButtons.forEach(btn => btn.classList.add('active'));
-        prevActiveButtons = [];
-      }
-    });
+    const onCloseDone = () => {
+      /* restore float-imgs that were visible */
+      document.querySelectorAll('.float-img[data-was-visible]').forEach(el => {
+        delete el.dataset.wasVisible;
+        gsap.fromTo(el,
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.4)' }
+        );
+      });
+      /* restore previously active category buttons */
+      prevActiveButtons.forEach(btn => btn.classList.add('active'));
+      prevActiveButtons = [];
+    };
+
+    if (window.innerWidth <= 768) {
+      gsap.to(panel, { y: '150%', duration: 0.5, ease: 'power3.in', pointerEvents: 'none', onComplete: onCloseDone });
+    } else {
+      gsap.to(panel, {
+        y: '-120%', x: '6%', rotation: -10,
+        duration: 0.7, ease: 'power2.inOut',
+        onComplete: onCloseDone
+      });
+    }
   }
 
   /* expose close-without-restore for TAB cycle */

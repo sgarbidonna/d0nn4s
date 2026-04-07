@@ -200,6 +200,7 @@ html, body {
   background: transparent;
   overflow: hidden;
   pointer-events: none; /* nav links stay clickable through the panel */
+  transform: translate(0%, 150%);
 }
 
 #bio-folio-bg {
@@ -380,7 +381,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  /* margin: 2vh 3vw 0.2vh; */
+  margin: 2vh 3vw 0.2vh;
   inline-size: max-content;
 }
 #bio-dev {
@@ -388,7 +389,7 @@ html, body {
   font-size: 0.65rem;
   font-weight: 300;
   color: #000;
-  /* margin: -18px 3vw 0; */
+  margin: -18px 3vw 0;
   inline-size: max-content;
 }
 
@@ -464,12 +465,8 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  /* padding: 12px 0px 23px 48px; */
+  padding: 88px 0px 23px 48px;
   overflow-y: auto;
-  padding-top: 350px;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 15px;
 }
 
 #bio-header-info {
@@ -759,7 +756,7 @@ html, body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding-top: 100px !important;
+  padding-top: 0px;
 }
 
 /* variante: video con aire lateral, alto completo */
@@ -1654,6 +1651,7 @@ iframe {
     height: calc(100dvh - var(--info-height, 160px));
     max-height: calc(100dvh - var(--info-height, 160px));
     min-height: 0;
+    padding-top: 100px !important;
   }
 
   /* info bar fixed at bottom — always visible */
@@ -1819,12 +1817,15 @@ iframe {
   }
 
   #bio-social {
-    position: absolute;
-    top: 120px;
-    flex-direction: column;
-    gap: 12px;
-    justify-content: flex-start;
-    left: 200px;
+    position: static;
+    order: 2;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-shrink: 0;
   }
 
   #bio-icons-area {
@@ -1852,18 +1853,23 @@ iframe {
   }
 
   #bio-grid {
-    position: static;
-    order: 2;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 24px;
+    display: contents;
   }
 
   #bio-center  { display: none; }
-  #bio-right   { order: 1; }
+  #bio-right {
+    order: 1;
+    width: 100%;
+    overflow-y: visible;
+    flex-shrink: 0;
+    padding-top: 350px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 15px;
+  }
   #bio-left {
-    order: 2;
+    order: 3;
+    flex-shrink: 0;
     gap: 33px;
     padding-top: 0;
     flex-direction: row;
@@ -1873,6 +1879,9 @@ iframe {
 
   #bio-label-softwares { display: none; }
   #bio-header-info     { text-align: left; }
+
+  #bio-ui-sound { margin: 0; }
+  #bio-dev      { margin: 0; }
 
   #close-contactbio {
     position: fixed;
