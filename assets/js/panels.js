@@ -482,14 +482,16 @@
   /* ── Panel factory ── */
   function initPanel(floatImg) {
     const panelId  = floatImg.dataset.panel;
-    if (!panelId) return;
+    if (!panelId) { console.warn('No panelId for floatImg', floatImg); return; }
 
     const panel    = document.getElementById(panelId);
     const bg       = document.getElementById(panelId.replace('-panel', '-bg'));
     const closeBtn = panel ? panel.querySelector('.panel-close') : null;
     const type     = floatImg.dataset.type || null;
 
-    if (!panel || !bg || !closeBtn) return;
+    if (!panel) { console.warn('Panel not found:', panelId); return; }
+    if (!bg) { console.warn('Background not found for:', panelId); return; }
+    if (!closeBtn) { console.warn('Close button not found in:', panelId); return; }
 
     const registryIdx = panelRegistry.length;
     const entry = { panel, bg, panelId, type, isOpen: false, closeFn: null, setOpen: null };
@@ -642,6 +644,7 @@
     }, { passive: true });
   }
 
+  console.log('panels.js: initializing float images, count:', document.querySelectorAll('.float-img[data-panel]').length);
   document.querySelectorAll('.float-img[data-panel]').forEach(initPanel);
 
   /* expose close-all for external use (e.g. contact-bio panel) */

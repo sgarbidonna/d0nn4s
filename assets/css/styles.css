@@ -1457,6 +1457,11 @@ iframe {
   pointer-events: auto;
 }
 
+/* hide navigation arrows on desktop */
+@media (min-width: 1025px) {
+  #panel-nav { display: none !important; }
+}
+
 .panel-nav-btn {
   background: none;
   border: none;
@@ -1482,23 +1487,64 @@ iframe {
    ══════════════════════════════════════════════════════════════════════ */
 @media (min-width: 769px) and (max-width: 1024px) {
 
-  /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
+  /* ── OVERFLOW: allow touch scroll on panels ─────────────────────── */
 
-  html, body { overflow: hidden; touch-action: none; }
+  html, body { overflow: hidden; }
 
-  /* ── PRELOADER ──────────────────────────────────────────────────── */
+  /* ── PANELS: enable vertical scroll on iPad/tablet ──────────────── */
 
-  /* ── NAV ────────────────────────────────────────────────────────── */
+  .project-panel.is-project {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
-  /* ── FLOAT IMAGES ───────────────────────────────────────────────── */
+  .project-media--split {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    align-items: stretch !important;
+  }
 
-  /* ── PANELS ─────────────────────────────────────────────────────── */
+  .split-carousel,
+  .split-video {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: 75vw !important;
+  }
+
+  .split-video .project-video-wrap {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+  }
 
   .panel-close { top: 46px; }
 
-  /* ── CONTACT / BIO ──────────────────────────────────────────────── */
+  /* ── MISC PANELS: allow vertical scroll ───────────────────────── */
 
-  /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
+  .project-panel.is-misc {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .project-panel.is-misc .panel-content {
+    height: auto !important;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  /* ── HSCROLL PANELS: allow horizontal scroll ─────────────────── */
+
+  .project-media--hscroll {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .hscroll-track {
+    touch-action: pan-x;
+  }
 
 }
 

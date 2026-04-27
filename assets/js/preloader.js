@@ -381,13 +381,15 @@
     /* update switcher button states immediately */
     btns.forEach(btn => btn.classList.toggle('active', btn.dataset.lang === lang));
 
-    /* fade out translatable text, swap, fade in */
-    const transEls = Array.from(document.querySelectorAll('[data-es][data-en]'));
+    /* select all elements with any language data attribute */
+    const transEls = Array.from(document.querySelectorAll('[data-es], [data-en], [data-zh]'));
     gsap.to(transEls, {
       opacity: 0, duration: 0.15,
       onComplete: () => {
         transEls.forEach(el => {
-          el.innerHTML = el.dataset[lang] !== undefined ? el.dataset[lang] : el.dataset.es;
+          /* try lang, then fallback to es */
+          const val = el.dataset[lang];
+          el.innerHTML = val !== undefined && val !== '' ? val : el.dataset.es;
         });
         gsap.to(transEls, { opacity: 1, duration: 0.25 });
       }

@@ -49,6 +49,41 @@
     container.addEventListener('wheel', onWheel, { passive: false });
     state.off = () => container.removeEventListener('wheel', onWheel);
 
+    /* ── Touch swipe for iPad/tablet ── */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchScrolling = false;
+
+    function onTouchStart(e) {
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchScrolling = true;
+    }
+
+    function onTouchMove(e) {
+      if (!touchScrolling || e.touches.length !== 1) return;
+      const dx = touchStartX - e.touches[0].clientX;
+      const dy = touchStartY - e.touches[0].clientY;
+      if (Math.abs(dx) < Math.abs(dy)) return;
+      e.preventDefault();
+      const max = getMax();
+      state.target = Math.max(0, Math.min(max, state.target + dx * 1.2));
+      touchStartX = e.touches[0].clientX;
+    }
+
+    function onTouchEnd() { touchScrolling = false; }
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: false });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    state.offTouch = () => {
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+    };
+
     /* ticker GSAP — lerp suave cada frame */
     const LERP = 0.18;
     function tick() {
@@ -71,6 +106,7 @@
     const s = instances[panelId];
     if (!s) return;
     s.off     && s.off();
+    s.offTouch && s.offTouch();
     s.tickOff && s.tickOff();
     const track = document.querySelector(`#${panelId} .hscroll-track`);
     if (track) gsap.set(track, { x: 0 });
