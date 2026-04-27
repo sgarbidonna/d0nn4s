@@ -1157,14 +1157,14 @@ iframe {
   flex: 0 0 500px;
 }
 
-.aziz-spotify-section .hscroll-section__main {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 0 40px;
-  min-height: 450px;
-  flex-direction: column;
-}
+  .aziz-spotify-section .hscroll-section__main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 40px;
+    min-height: 450px;
+    flex-direction: column;
+  }
 
 .aziz-spotify-section iframe {
   display: block;
@@ -1435,53 +1435,11 @@ iframe {
   color: var(--fg);
   opacity: 0.4;
 }
-
+ #panel-nav{
+  display: none;
+ }
 /* ══════════════════════════════════════ PANEL NAVIGATION ARROWS */
-
-#panel-nav {
-  position: absolute;
-  top: 24px;
-  left: 28px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  z-index: 20;
-  opacity: 0;
-  pointer-events: none;
-  padding-top: 2px;
-  transition: opacity 0.25s ease;
-}
-
-#panel-nav.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* hide navigation arrows on desktop */
-@media (min-width: 1025px) {
-  #panel-nav { display: none !important; }
-}
-
-.panel-nav-btn {
-  background: none;
-  border: none;
-  font-family: var(--font);
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: var(--fg);
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
-  line-height: 1;
-  opacity: 0.4;
-  transition: opacity 0.2s ease;
-}
-
-.panel-nav-btn:hover {
-  opacity: 1;
-}
-
+/* 
 /* ══════════════════════════════════════════════════════════════════════
    TABLET  ·  769px – 1024px
    ══════════════════════════════════════════════════════════════════════ */
@@ -1492,7 +1450,9 @@ iframe {
   html, body { overflow: hidden; }
 
   /* ── PANELS: enable vertical scroll on iPad/tablet ──────────────── */
-
+ #panel-nav{
+  display: none;
+ }
   .project-panel.is-project {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1553,6 +1513,48 @@ iframe {
    MOBILE  ·  max-width: 768px
    ══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+  
+#panel-nav {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  padding-top: 2px;
+  transition: opacity 0.25s ease;
+}
+
+#panel-nav.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+.panel-nav-btn {
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--fg);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.panel-nav-btn:hover {
+  opacity: 1;
+} 
+
 
   /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
 
@@ -1808,7 +1810,7 @@ iframe {
     aspect-ratio: 16 / 9;
   }
 
-  /* ── HSCROLL → VERTICAL SCROLL ──────────────────────────────────── */
+   /* ── HSCROLL → VERTICAL SCROLL ──────────────────────────────────── */
 
   .project-media--hscroll {
     overflow-y: auto !important;
@@ -1832,6 +1834,36 @@ iframe {
     width: 100% !important;
     height: 56vw !important;
   }
+
+  /* Juano panel mobile: hide desktop-only sections (images + iframes interleaved) */
+  #juano-panel .hscroll-section:nth-child(1),
+  #juano-panel .hscroll-section:nth-child(2),
+  #juano-panel .hscroll-section:nth-child(3),
+  #juano-panel .hscroll-section:nth-child(4),
+  #juano-panel .hscroll-section:nth-child(5) { display: none !important; }
+
+  /* Juano panel mobile: show combined image section + combined spotify section */
+  #juano-panel .juano-mobile-combined,
+  #juano-panel .juano-mobile-spotifys { display: flex !important; }
+
+  /* Combined images: normal carousel height */
+  #juano-panel .juano-mobile-combined { height: 56vw !important; }
+
+  /* Combined spotifys: auto height, iframes stacked */
+  #juano-panel .juano-mobile-spotifys { height: auto !important; }
+  #juano-panel .juano-mobile-spotifys__inner {
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 0 4vw !important;
+    width: 100% !important;
+    height: auto !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    overflow-y: visible !important;
+  }
+
+  /* Other panels keep original sections visible on mobile */
+  .project-panel.is-project:not(#juano-panel) .hscroll-section { display: flex !important; }
 
   /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 
@@ -1938,4 +1970,3 @@ iframe {
   /* ── LANGUAGE SWITCHER ──────────────────────────────────────────── */
 
 }
-
