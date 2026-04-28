@@ -1894,6 +1894,16 @@ iframe {
 
   #cieloazul-panel .cieloazul-mobile-combined { display: flex !important; }
 
+  /* Ginebra mobile: taller sections for vertical-ratio videos */
+  #ginebra-panel .hscroll-section {
+    height: 160vw !important;
+  }
+  #ginebra-panel .ginebra-video {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+  }
+
   /* Lacura DG mobile: hide all 3 desktop image sections, show merged carousel */
   #lacura-dg-panel .hscroll-section:nth-child(1),
   #lacura-dg-panel .hscroll-section:nth-child(2),
