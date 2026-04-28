@@ -1438,6 +1438,22 @@ iframe {
  #panel-nav{
   display: none;
  }
+/* ══════════════════════════════════════ JUANO — mobile-only sections hidden on desktop/tablet */
+#juano-panel .juano-mobile-combined,
+#juano-panel .juano-mobile-spotifys { display: none; }
+
+/* LACURA 10ANIOS — mobile-only section hidden on desktop/tablet */
+#lacura-10anios-panel .lacura10-mobile-combined { display: none; }
+
+/* POLVAREDA — mobile-only section hidden on desktop/tablet */
+#polvareda-panel .polvareda-mobile-combined { display: none; }
+
+/* LACURA DG — mobile-only section hidden on desktop/tablet */
+#lacura-dg-panel .lacura-dg-mobile-combined { display: none; }
+
+/* CIELOAZUL — mobile-only section hidden on desktop/tablet */
+#cieloazul-panel .cieloazul-mobile-combined { display: none; }
+
 /* ══════════════════════════════════════ PANEL NAVIGATION ARROWS */
 /* 
 /* ══════════════════════════════════════════════════════════════════════
@@ -1835,21 +1851,16 @@ iframe {
     height: 56vw !important;
   }
 
-  /* Juano panel mobile: hide desktop-only sections (images + iframes interleaved) */
+  /* Juano panel mobile: hide desktop sections, show merged carousel + spotifys */
   #juano-panel .hscroll-section:nth-child(1),
   #juano-panel .hscroll-section:nth-child(2),
   #juano-panel .hscroll-section:nth-child(3),
-  #juano-panel .hscroll-section:nth-child(4),
-  #juano-panel .hscroll-section:nth-child(5) { display: none !important; }
+  #juano-panel .hscroll-section:nth-child(4) { display: none !important; }
 
-  /* Juano panel mobile: show combined image section + combined spotify section */
   #juano-panel .juano-mobile-combined,
   #juano-panel .juano-mobile-spotifys { display: flex !important; }
 
-  /* Combined images: normal carousel height */
-  #juano-panel .juano-mobile-combined { height: 56vw !important; }
-
-  /* Combined spotifys: auto height, iframes stacked */
+  /* Spotify section: stack both iframes vertically */
   #juano-panel .juano-mobile-spotifys { height: auto !important; }
   #juano-panel .juano-mobile-spotifys__inner {
     flex-direction: column !important;
@@ -1857,13 +1868,38 @@ iframe {
     padding: 0 4vw !important;
     width: 100% !important;
     height: auto !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-    overflow-y: visible !important;
   }
 
-  /* Other panels keep original sections visible on mobile */
-  .project-panel.is-project:not(#juano-panel) .hscroll-section { display: flex !important; }
+  /* Lacura 10anios mobile: hide desktop image sections, show merged carousel */
+  #lacura-10anios-panel .hscroll-section:nth-child(1),
+  #lacura-10anios-panel .hscroll-section:nth-child(4),
+  #lacura-10anios-panel .hscroll-section:nth-child(5) { display: none !important; }
+
+  #lacura-10anios-panel .lacura10-mobile-combined { display: flex !important; order: 1; }
+  #lacura-10anios-panel .hscroll-track > .instagram-media { order: 2; }
+
+  /* Polvareda mobile: hide all 5 desktop image sections, show merged carousel */
+  #polvareda-panel .hscroll-section:nth-child(1),
+  #polvareda-panel .hscroll-section:nth-child(2),
+  #polvareda-panel .hscroll-section:nth-child(3),
+  #polvareda-panel .hscroll-section:nth-child(4),
+  #polvareda-panel .hscroll-section:nth-child(5) { display: none !important; }
+
+  #polvareda-panel .polvareda-mobile-combined { display: flex !important; }
+
+  /* Cieloazul mobile: hide all 3 desktop image sections, show merged carousel */
+  #cieloazul-panel .hscroll-section:nth-child(1),
+  #cieloazul-panel .hscroll-section:nth-child(2),
+  #cieloazul-panel .hscroll-section:nth-child(3) { display: none !important; }
+
+  #cieloazul-panel .cieloazul-mobile-combined { display: flex !important; }
+
+  /* Lacura DG mobile: hide all 3 desktop image sections, show merged carousel */
+  #lacura-dg-panel .hscroll-section:nth-child(1),
+  #lacura-dg-panel .hscroll-section:nth-child(2),
+  #lacura-dg-panel .hscroll-section:nth-child(3) { display: none !important; }
+
+  #lacura-dg-panel .lacura-dg-mobile-combined { display: flex !important; }
 
   /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 
