@@ -1454,6 +1454,17 @@ iframe {
 /* CIELOAZUL — mobile-only section hidden on desktop/tablet */
 #cieloazul-panel .cieloazul-mobile-combined { display: none; }
 
+
+
+
+#lacura-10anios-panel .hscroll-section {
+    flex: 0 0 33vw;
+}
+
+#lacura-10anios-panel .hscroll-track {
+    padding: 0px 6vw;
+}
+
 /* ══════════════════════════════════════ PANEL NAVIGATION ARROWS */
 /* 
 /* ══════════════════════════════════════════════════════════════════════
