@@ -1,34 +1,81 @@
 /* ══════════════════════════════════════ PRELOADER */
+/* ══════════════════════════════════════ PRELOADER */
 (function () {
+
   const preloader = document.getElementById('preloader');
   const preloaderVideoDesktop = document.getElementById('preloader-video-desktop');
   const preloaderVideoMobile  = document.getElementById('preloader-video-mobile');
+
   const text1     = document.getElementById('loader-text');
   const text2     = document.getElementById('loader-text-2');
   const letters1  = text1.querySelectorAll('span:not(.space)');
   const letters2  = text2.querySelectorAll('span:not(.space)');
   const space1    = document.getElementById('the-space');
   const space2    = document.getElementById('the-space-2');
+
   const barWrap   = document.getElementById('loader-bar-wrap');
   const line      = document.getElementById('loader-line');
   const site      = document.getElementById('site');
 
-  /* ── which video is active based on CSS visibility ── */
+  /* ─────────────────────────────────────
+     VIDEO HANDLING (FIXED FOR MOBILE)
+  ───────────────────────────────────── */
+
   function getActiveVideo() {
-    var style = window.getComputedStyle(preloaderVideoDesktop);
+    const style = window.getComputedStyle(preloaderVideoDesktop);
     return (style.display === 'none') ? preloaderVideoMobile : preloaderVideoDesktop;
   }
 
-  /* ── spread helper ── */
+  function forceVideoPlay(video) {
+    if (!video) return;
+
+    video.muted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    const tryPlay = () => {
+      video.play().catch(() => {
+        // fallback agresivo iOS
+        video.load();
+        video.play().catch(()=>{});
+      });
+    };
+
+    // intentar inmediatamente
+    tryPlay();
+
+    // retry en caso de bloqueo inicial
+    setTimeout(tryPlay, 200);
+    setTimeout(tryPlay, 600);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const vid = getActiveVideo();
+    forceVideoPlay(vid);
+  });
+
+  window.addEventListener('resize', () => {
+    const vid = getActiveVideo();
+    forceVideoPlay(vid);
+  });
+
+  /* ─────────────────────────────────────
+     SPACING LOGIC
+  ───────────────────────────────────── */
+
   function setSpace(textEl, spaceEl, content) {
     const probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:uppercase;';
     probe.textContent = content;
+
     textEl.appendChild(probe);
     const lettersW = probe.offsetWidth;
     textEl.removeChild(probe);
-    const padding = window.innerWidth <= 768 ? 48 : 104; /* 24px each side on mobile */
+
+    const padding = window.innerWidth <= 768 ? 48 : 104;
     const spread = window.innerWidth - lettersW - padding;
+
     spaceEl.style.width = Math.max(spread, 16) + 'px';
   }
 
@@ -40,14 +87,16 @@
     setSpace(text2, space2, 'selectedworks');
   });
 
-  /* ── estado inicial ── */
+  /* ─────────────────────────────────────
+     INITIAL STATE
+  ───────────────────────────────────── */
+
   gsap.set(text2, { opacity: 0 });
   const menuItems = document.querySelectorAll('.nav-links button:not(#btn-selected-works)');
   gsap.set(menuItems, { opacity: 0 });
 
-  /* ══════════════ FASE 1 — "3D + AI ARTIST" (5s) ══════════════ */
+  /* ══════════════ TIMELINE ══════════════ */
 
-  /* letras entran */
   gsap.to(letters1, {
     opacity: 1,
     stagger: 0.065,
@@ -55,32 +104,27 @@
     ease: 'power1.out'
   });
 
-  /* bar 1: 0→100% en 5s */
   gsap.fromTo(line, { scaleX: 0 }, { scaleX: 1, duration: 5, ease: 'none' });
 
   const tl = gsap.timeline({ delay: 0.2 });
 
   tl
-    /* esperar que el bar llegue al final */
     .to({}, { duration: 4.4 })
 
-    /* fade out texto 1 */
     .to(text1, { opacity: 0, duration: 0.3, ease: 'power1.in' })
 
-    /* reset bar → 0 instantáneo */
     .call(() => {
       gsap.set(line, { scaleX: 0, opacity: 1 });
     })
 
-    /* bar 2: 0→100% en 2s */
     .call(() => {
       gsap.to(line, { scaleX: 1, duration: 2, ease: 'none' });
     })
 
-    /* ══ FASE 2 — "SELECTED WORKS" (2s) ══ */
+    /* ── PHASE 2 ── */
 
-    /* mostrar texto 2 y animar letras */
     .to(text2, { opacity: 1, duration: 0.01 })
+
     .to(letters2, {
       opacity: 1,
       stagger: 0.055,
@@ -88,67 +132,72 @@
       ease: 'power1.out'
     }, '<')
 
-    /* esperar 2s totales de fase 2 */
     .to({}, { duration: 1.0 })
 
-    /* colapsar space → gap normal */
     .to(space2, { width: '0.5em', duration: 0.8, ease: 'power2.inOut' })
 
-    /* ocultar bar */
     .to(line, {
-      opacity: 0, duration: 0.25, ease: 'none',
+      opacity: 0,
+      duration: 0.25,
       onComplete: () => { barWrap.style.display = 'none'; }
     }, '-=0.3')
 
-    /* shrink font */
     .to(text2, {
       fontSize: 'clamp(11px, 1vw, 14px)',
-      letterSpacing: '0.12em',
       duration: 0.45,
       ease: 'power2.inOut'
     }, '+=0.05')
 
-    /* mover hacia contact-bio + desaparecer antes de llegar */
     .to(text2, {
       duration: 0.45,
       ease: 'power2.inOut',
       onStart() {
-        const btn    = document.getElementById('contact-bio');
-        const btnR   = btn.getBoundingClientRect();
-        const target = btnR.top + btnR.height / 2;
+        const btn = document.getElementById('contact-bio');
+        const rect = btn.getBoundingClientRect();
+        const target = rect.top + rect.height / 2;
+
         gsap.to(text2, {
           top: target,
           yPercent: -50,
           duration: 0.45,
           ease: 'power2.inOut'
         });
-        /* fade out a mitad del viaje */
+
         gsap.to(text2, {
           opacity: 0,
           duration: 0.18,
-          delay: 0.16,
-          ease: 'power1.in'
+          delay: 0.16
         });
       }
     }, '-=0.45')
 
-    /* fade out video background */
+    /* ─────────────────────────────
+       VIDEO FADE OUT + HARD STOP
+    ───────────────────────────── */
+
     .to([preloaderVideoDesktop, preloaderVideoMobile], {
-      opacity: 0, duration: 0.6, ease: 'power1.in',
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power1.in',
       onComplete: () => {
-        if (preloaderVideoDesktop) preloaderVideoDesktop.pause();
-        if (preloaderVideoMobile) preloaderVideoMobile.pause();
+        [preloaderVideoDesktop, preloaderVideoMobile].forEach(v => {
+          if (!v) return;
+          v.pause();
+          v.currentTime = 0;
+        });
       }
     }, '-=0.6')
 
-    /* fade out preloader, reveal site */
+    /* ── EXIT PRELOADER ── */
+
     .to(preloader, {
-      opacity: 0, duration: 0.25, ease: 'power1.in',
+      opacity: 0,
+      duration: 0.25,
       onComplete: () => { preloader.style.display = 'none'; }
     }, '+=0.1')
+
     .to(site, { opacity: 1, duration: 0.01 }, '<')
 
-    /* menú entra un poco antes — overlap con fade del preloader */
     .to(menuItems, {
       opacity: 1,
       stagger: 0.09,
@@ -156,19 +205,16 @@
       ease: 'power2.out'
     }, '-=0.22')
 
-    /* lang switcher appears after menu */
     .to('#page-lang-switcher', {
       opacity: 1,
       duration: 0.3,
-      ease: 'power2.out',
       onComplete: () => {
-        document.getElementById('page-lang-switcher').style.pointerEvents = 'auto';
+        const el = document.getElementById('page-lang-switcher');
+        if (el) el.style.pointerEvents = 'auto';
       }
     }, '+=0.1');
 
 })();
-
-
 /* ══════════════════════════════════════ NAV — TOGGLE */
 (function () {
 

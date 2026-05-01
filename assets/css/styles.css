@@ -1682,7 +1682,9 @@ iframe {
   .carousel-filmstrip img.is-active {
     opacity: 1;
   }
-
+::-webkit-media-controls {
+  display: none !important;
+}
 
 
   /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */
