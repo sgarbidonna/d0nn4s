@@ -23,9 +23,20 @@ html, body {
 #preloader {
   position: fixed;
   inset: 0;
-  background: var(--bg);
+  background: #fff;
   z-index: 9000;
   overflow: hidden;
+}
+
+#preloader-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 /* Top-aligned — full width, always centred as a block */
@@ -33,6 +44,7 @@ html, body {
   position: absolute;
   top: 48px;
   left: 0; right: 0;
+  z-index: 1;
   display: flex;
   align-items: baseline;
   justify-content: center;
@@ -90,6 +102,7 @@ html, body {
   position: absolute;
   top: 76px;
   left: 0; right: 0;
+  z-index: 1;
   height: 1px;
   background: #fff;
 }
@@ -1454,17 +1467,6 @@ iframe {
 /* CIELOAZUL — mobile-only section hidden on desktop/tablet */
 #cieloazul-panel .cieloazul-mobile-combined { display: none; }
 
-
-
-
-#lacura-10anios-panel .hscroll-section {
-    flex: 0 0 33vw;
-}
-
-#lacura-10anios-panel .hscroll-track {
-    padding: 0px 6vw;
-}
-
 /* ══════════════════════════════════════ PANEL NAVIGATION ARROWS */
 /* 
 /* ══════════════════════════════════════════════════════════════════════
@@ -1655,6 +1657,7 @@ iframe {
 
   /* ── PRELOADER ──────────────────────────────────────────────────── */
 
+  #preloader-video { display: none; }
   #loader-text, #loader-text-2 { top: unset; bottom: 56px; }
   #loader-bar-wrap              { top: unset; bottom: 40px; }
 

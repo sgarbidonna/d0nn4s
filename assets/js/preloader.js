@@ -1,6 +1,7 @@
 /* ══════════════════════════════════════ PRELOADER */
 (function () {
   const preloader = document.getElementById('preloader');
+  const preloaderVideo = document.getElementById('preloader-video');
   const text1     = document.getElementById('loader-text');
   const text2     = document.getElementById('loader-text-2');
   const letters1  = text1.querySelectorAll('span:not(.space)');
@@ -12,6 +13,12 @@
   const site      = document.getElementById('site');
 
   /* ── spread helper ── */
+
+  /* force play on mobile browsers that block autoplay */
+  if (preloaderVideo) {
+    preloaderVideo.play().catch(() => {});
+  }
+
   function setSpace(textEl, spaceEl, content) {
     const probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:uppercase;';
@@ -123,6 +130,12 @@
         });
       }
     }, '-=0.45')
+
+    /* fade out video background */
+    .to(preloaderVideo, {
+      opacity: 0, duration: 0.6, ease: 'power1.in',
+      onComplete: () => { preloaderVideo.pause(); }
+    }, '-=0.6')
 
     /* fade out preloader, reveal site */
     .to(preloader, {
