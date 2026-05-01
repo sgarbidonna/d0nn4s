@@ -12,13 +12,36 @@
   const line      = document.getElementById('loader-line');
   const site      = document.getElementById('site');
 
-  /* ── spread helper ── */
-
-  /* force play on mobile browsers that block autoplay */
-  if (preloaderVideo) {
+  /* ── force play across all browsers ── */
+  function forcePlay() {
+    if (!preloaderVideo) return;
     preloaderVideo.play().catch(() => {});
   }
 
+  forcePlay();
+
+  /* retry on every possible event */
+  if (preloaderVideo) {
+    preloaderVideo.addEventListener('loadeddata', forcePlay, { once: true });
+    preloaderVideo.addEventListener('canplay', forcePlay, { once: true });
+    preloaderVideo.addEventListener('canplaythrough', forcePlay, { once: true });
+
+    /* first touch / click as ultimate fallback */
+    function playOnInteraction() {
+      forcePlay();
+      document.removeEventListener('touchstart', playOnInteraction);
+      document.removeEventListener('click', playOnInteraction);
+    }
+    document.addEventListener('touchstart', playOnInteraction, { once: true });
+    document.addEventListener('click', playOnInteraction, { once: true });
+
+    /* Safari sometimes needs a small delay + retry */
+    setTimeout(forcePlay, 100);
+    setTimeout(forcePlay, 500);
+    setTimeout(forcePlay, 1000);
+  }
+
+  /* ── spread helper ── */
   function setSpace(textEl, spaceEl, content) {
     const probe = document.createElement('span');
     probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;text-transform:uppercase;';
