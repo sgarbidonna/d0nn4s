@@ -1,7 +1,8 @@
 /* ══════════════════════════════════════ PRELOADER */
 (function () {
   const preloader = document.getElementById('preloader');
-  const preloaderVideo = document.getElementById('preloader-video');
+  const preloaderVideoDesktop = document.getElementById('preloader-video-desktop');
+  const preloaderVideoMobile  = document.getElementById('preloader-video-mobile');
   const text1     = document.getElementById('loader-text');
   const text2     = document.getElementById('loader-text-2');
   const letters1  = text1.querySelectorAll('span:not(.space)');
@@ -12,26 +13,10 @@
   const line      = document.getElementById('loader-line');
   const site      = document.getElementById('site');
 
-  /* ── force play across all browsers ── */
-  function forcePlay() {
-    if (!preloaderVideo) return;
-    preloaderVideo.play().catch(function(){});
-  }
-
-  /* set src based on device — only ONE video downloads */
-  if (preloaderVideo) {
-    var isMobile = window.innerWidth <= 768;
-    preloaderVideo.src = isMobile
-      ? './assets/preloader/preloader2-mobile.mp4'
-      : './assets/preloader/preloader2.mp4';
-
-    forcePlay();
-    preloaderVideo.addEventListener('loadeddata', forcePlay, { once: true });
-    preloaderVideo.addEventListener('canplay', forcePlay, { once: true });
-    preloaderVideo.addEventListener('canplaythrough', forcePlay, { once: true });
-    setTimeout(forcePlay, 100);
-    setTimeout(forcePlay, 500);
-    setTimeout(forcePlay, 1000);
+  /* ── which video is active based on CSS visibility ── */
+  function getActiveVideo() {
+    var style = window.getComputedStyle(preloaderVideoDesktop);
+    return (style.display === 'none') ? preloaderVideoMobile : preloaderVideoDesktop;
   }
 
   /* ── spread helper ── */
@@ -148,9 +133,12 @@
     }, '-=0.45')
 
     /* fade out video background */
-    .to(preloaderVideo, {
+    .to([preloaderVideoDesktop, preloaderVideoMobile], {
       opacity: 0, duration: 0.6, ease: 'power1.in',
-      onComplete: () => { preloaderVideo.pause(); }
+      onComplete: () => {
+        if (preloaderVideoDesktop) preloaderVideoDesktop.pause();
+        if (preloaderVideoMobile) preloaderVideoMobile.pause();
+      }
     }, '-=0.6')
 
     /* fade out preloader, reveal site */
