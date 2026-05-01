@@ -46,6 +46,7 @@ html, body {
 #preloader-video-mobile {
   transform: translate(-52%, -45%) scale(0.8);
   display: none;
+  object-fit: cover;
 }
 
 /* hide desktop, show mobile on small screens */
@@ -56,10 +57,7 @@ html, body {
 
 #preloader-video-desktop::-webkit-media-controls,
 #preloader-video-desktop::-webkit-media-controls-enclosure,
-#preloader-video-desktop::-webkit-media-controls-panel,
-#preloader-video-mobile::-webkit-media-controls,
-#preloader-video-mobile::-webkit-media-controls-enclosure,
-#preloader-video-mobile::-webkit-media-controls-panel {
+#preloader-video-desktop::-webkit-media-controls-panel {
   display: none !important;
   -webkit-appearance: none;
   opacity: 0;
@@ -1682,9 +1680,7 @@ iframe {
   .carousel-filmstrip img.is-active {
     opacity: 1;
   }
-  ::-webkit-media-controls {
-    display: none !important;
-  }
+
 
 
   /* ── OVERFLOW LOCK (SPA) ─────────────────────────────────────────── */

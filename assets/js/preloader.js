@@ -4,7 +4,7 @@
 
   const preloader = document.getElementById('preloader');
   const preloaderVideoDesktop = document.getElementById('preloader-video-desktop');
-  const preloaderVideoMobile  = document.getElementById('preloader-video-mobile');
+  const preloaderImgMobile    = document.getElementById('preloader-video-mobile');
 
   const text1     = document.getElementById('loader-text');
   const text2     = document.getElementById('loader-text-2');
@@ -16,66 +16,6 @@
   const barWrap   = document.getElementById('loader-bar-wrap');
   const line      = document.getElementById('loader-line');
   const site      = document.getElementById('site');
-
-  /* ─────────────────────────────────────
-     VIDEO HANDLING (FIXED FOR MOBILE)
-  ───────────────────────────────────── */
-
-  function getActiveVideo() {
-    const style = window.getComputedStyle(preloaderVideoDesktop);
-    return (style.display === 'none') ? preloaderVideoMobile : preloaderVideoDesktop;
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-  const vid = getActiveVideo();
-  if (!vid) return;
-
-  vid.muted = true;
-  vid.setAttribute("muted", "");
-  vid.setAttribute("playsinline", "");
-  vid.setAttribute("webkit-playsinline", "");
-
-  vid.play().catch(() => {
-    // fallback ultra agresivo (iOS)
-    vid.setAttribute("autoplay", "");
-    vid.load();
-    vid.play().catch(()=>{});
-  });
-});
-
-  function forceVideoPlay(video) {
-    if (!video) return;
-
-    video.muted = true;
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
-
-    const tryPlay = () => {
-      video.play().catch(() => {
-        // fallback agresivo iOS
-        video.load();
-        video.play().catch(()=>{});
-      });
-    };
-
-    // intentar inmediatamente
-    tryPlay();
-
-    // retry en caso de bloqueo inicial
-    setTimeout(tryPlay, 200);
-    setTimeout(tryPlay, 600);
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const vid = getActiveVideo();
-    forceVideoPlay(vid);
-  });
-
-  window.addEventListener('resize', () => {
-    const vid = getActiveVideo();
-    forceVideoPlay(vid);
-  });
 
   /* ─────────────────────────────────────
      SPACING LOGIC
@@ -192,16 +132,15 @@
        VIDEO FADE OUT + HARD STOP
     ───────────────────────────── */
 
-    .to([preloaderVideoDesktop, preloaderVideoMobile], {
+    .to([preloaderVideoDesktop, preloaderImgMobile], {
       opacity: 0,
       duration: 0.6,
       ease: 'power1.in',
       onComplete: () => {
-        [preloaderVideoDesktop, preloaderVideoMobile].forEach(v => {
-          if (!v) return;
-          v.pause();
-          v.currentTime = 0;
-        });
+        if (preloaderVideoDesktop) {
+          preloaderVideoDesktop.pause();
+          preloaderVideoDesktop.currentTime = 0;
+        }
       }
     }, '-=0.6')
 
