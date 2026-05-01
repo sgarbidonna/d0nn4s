@@ -48,6 +48,13 @@ html, body {
   pointer-events: none;
 }
 
+#preloader-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Top-aligned — full width, always centred as a block */
 #loader-text {
   position: absolute;
@@ -1666,7 +1673,7 @@ iframe {
 
   /* ── PRELOADER ──────────────────────────────────────────────────── */
 
-  #preloader-video { object-fit: cover; transform: translate(-52%, -45%) scale(0.8); }
+  #preloader-video { object-fit: cover; transform: translate(-52%, -35%) scale(0.8); }
   #loader-text, #loader-text-2 { top: unset; bottom: 56px; }
   #loader-bar-wrap              { top: unset; bottom: 40px; }
 

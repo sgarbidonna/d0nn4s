@@ -15,7 +15,7 @@
   /* ── force play across all browsers ── */
   function forcePlay() {
     if (!preloaderVideo) return;
-    preloaderVideo.play().catch(() => {});
+    preloaderVideo.play().catch(function(){});
   }
 
   /* set src based on device — only ONE video downloads */
@@ -26,22 +26,9 @@
       : './assets/preloader/preloader2.mp4';
 
     forcePlay();
-
-    /* retry on every possible event */
     preloaderVideo.addEventListener('loadeddata', forcePlay, { once: true });
     preloaderVideo.addEventListener('canplay', forcePlay, { once: true });
     preloaderVideo.addEventListener('canplaythrough', forcePlay, { once: true });
-
-    /* first touch / click as ultimate fallback */
-    function playOnInteraction() {
-      forcePlay();
-      document.removeEventListener('touchstart', playOnInteraction);
-      document.removeEventListener('click', playOnInteraction);
-    }
-    document.addEventListener('touchstart', playOnInteraction, { once: true });
-    document.addEventListener('click', playOnInteraction, { once: true });
-
-    /* Safari sometimes needs a small delay + retry */
     setTimeout(forcePlay, 100);
     setTimeout(forcePlay, 500);
     setTimeout(forcePlay, 1000);
