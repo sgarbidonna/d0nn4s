@@ -18,10 +18,16 @@
     preloaderVideo.play().catch(() => {});
   }
 
-  forcePlay();
-
-  /* retry on every possible event */
+  /* set src based on device — only ONE video downloads */
   if (preloaderVideo) {
+    var isMobile = window.innerWidth <= 768;
+    preloaderVideo.src = isMobile
+      ? './assets/preloader/preloader2-mobile.mp4'
+      : './assets/preloader/preloader2.mp4';
+
+    forcePlay();
+
+    /* retry on every possible event */
     preloaderVideo.addEventListener('loadeddata', forcePlay, { once: true });
     preloaderVideo.addEventListener('canplay', forcePlay, { once: true });
     preloaderVideo.addEventListener('canplaythrough', forcePlay, { once: true });
