@@ -26,6 +26,23 @@
     return (style.display === 'none') ? preloaderVideoMobile : preloaderVideoDesktop;
   }
 
+  document.addEventListener("DOMContentLoaded", () => {
+  const vid = getActiveVideo();
+  if (!vid) return;
+
+  vid.muted = true;
+  vid.setAttribute("muted", "");
+  vid.setAttribute("playsinline", "");
+  vid.setAttribute("webkit-playsinline", "");
+
+  vid.play().catch(() => {
+    // fallback ultra agresivo (iOS)
+    vid.setAttribute("autoplay", "");
+    vid.load();
+    vid.play().catch(()=>{});
+  });
+});
+
   function forceVideoPlay(video) {
     if (!video) return;
 
