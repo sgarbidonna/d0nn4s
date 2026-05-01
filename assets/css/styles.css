@@ -39,6 +39,15 @@ html, body {
   z-index: 0;
 }
 
+#preloader-video::-webkit-media-controls,
+#preloader-video::-webkit-media-controls-enclosure,
+#preloader-video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Top-aligned — full width, always centred as a block */
 #loader-text {
   position: absolute;
