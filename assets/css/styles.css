@@ -1673,7 +1673,7 @@ iframe {
 
   /* ── PRELOADER ──────────────────────────────────────────────────── */
 
-  #preloader-video { object-fit: cover; transform: translate(-65%, -25%) scale(0.8); }
+  #preloader-video { object-fit: cover; transform: translate(-67%, -25%) scale(0.8); }
   #loader-text, #loader-text-2 { top: unset; bottom: 56px; }
   #loader-bar-wrap              { top: unset; bottom: 40px; }
 
