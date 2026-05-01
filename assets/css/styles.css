@@ -32,7 +32,7 @@ html, body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
+  transform: translate(-52%, -45%) scale(0.8);
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1657,7 +1657,7 @@ iframe {
 
   /* ── PRELOADER ──────────────────────────────────────────────────── */
 
-  #preloader-video { object-fit: cover; }
+  #preloader-video { display: none; }
   #loader-text, #loader-text-2 { top: unset; bottom: 56px; }
   #loader-bar-wrap              { top: unset; bottom: 40px; }
 
