@@ -1430,6 +1430,65 @@ iframe {
   gap: 8vw;
 }
 
+/* ══════════════════════════════════════ HSCROLL SECTION LABEL */
+
+.hscroll-section__label {
+  font-family: var(--font);
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg);
+  opacity: 0.4;
+  padding: 10px 0 6px;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ══════════════════════════════════════ VIDEO CAROUSEL (within hscroll) */
+
+.hscroll-section__main.split-carousel video.carousel-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  background: white;
+}
+
+.hscroll-section__main.split-carousel video.carousel-img.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════ HUGGIES — video collection panels */
+
+#huggies-panel .hscroll-track {
+  padding: 0;
+  gap: 6vw;
+}
+
+#huggies-panel .hscroll-section {
+  flex: 0 0 60vw;
+  display: flex;
+  flex-direction: column;
+}
+
+#huggies-panel .hscroll-section__main {
+  flex: 1;
+  min-height: 0;
+}
+
+/* IG embed: blockquote sits directly in .hscroll-track (same as lacura-10anios) */
+#huggies-panel .hscroll-track > .instagram-media,
+#huggies-panel .hscroll-track > .instagram-media.instagram-media-rendered {
+  flex: 0 0 auto;
+  align-self: center;
+}
 
 
 
@@ -1955,6 +2014,26 @@ iframe {
   #lacura-dg-panel .hscroll-section:nth-child(3) { display: none !important; }
 
   #lacura-dg-panel .lacura-dg-mobile-combined { display: flex !important; }
+
+  /* Huggies mobile: taller sections for video carousels */
+  #huggies-panel .hscroll-section {
+    height: 70vw !important;
+  }
+
+  #huggies-panel .hscroll-section__main.split-carousel video.carousel-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+  }
+
+  #huggies-panel .hscroll-track > .instagram-media,
+  #huggies-panel .hscroll-track > .instagram-media.instagram-media-rendered {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
 
   /* ── CONTACT / BIO ──────────────────────────────────────────────── */
 

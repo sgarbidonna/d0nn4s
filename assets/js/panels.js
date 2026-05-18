@@ -64,6 +64,10 @@
         img.src = img.dataset.src;
         img.removeAttribute('data-src');
       });
+      hscrollTrack.querySelectorAll('video[data-src]').forEach(video => {
+        video.src = video.dataset.src;
+        video.removeAttribute('data-src');
+      });
       hscrollTrack.querySelectorAll('iframe[data-src]').forEach(iframe => {
         iframe.src = iframe.dataset.src;
         iframe.removeAttribute('data-src');
@@ -118,6 +122,10 @@
     /* mostrar primera */
     gsap.set(images[0], { opacity: 1 });
     images[0].classList.add('is-visible');
+    /* auto-play first video */
+    if (images[0].tagName === 'VIDEO') {
+      images[0].play().catch(() => {});
+    }
 
     function renderFilmstrip(animated) {
       if (!filmSlots.length) return;
@@ -175,6 +183,8 @@
       if (animating || i === current) return;
       animating = true;
 
+      /* pause previous video */
+      if (images[current].tagName === 'VIDEO') images[current].pause();
       images[current].classList.remove('is-visible');
       gsap.to(images[current], { opacity: 0, duration: 0.35, ease: 'power1.out' });
       gsap.to(images[i], {
@@ -182,6 +192,11 @@
         onComplete: () => { animating = false; }
       });
       images[i].classList.add('is-visible');
+      /* play new video */
+      if (images[i].tagName === 'VIDEO') {
+        images[i].currentTime = 0;
+        images[i].play().catch(() => {});
+      }
 
       current = i;
 
@@ -252,6 +267,10 @@
     images[0].classList.add('is-active');
     gsap.set(images[0], { opacity: 1 });
     images.slice(1).forEach(img => gsap.set(img, { opacity: 0 }));
+    /* auto-play first video */
+    if (images[0].tagName === 'VIDEO') {
+      images[0].play().catch(() => {});
+    }
 
     /* ── Mobile filmstrip ── */
     /* filmSlots: array of {el, srcIdx} — enough slots to cover 3x viewport */
@@ -302,6 +321,11 @@
     }
 
     if (window.innerWidth <= 768) {
+      /* skip filmstrip for video carousels (can't use video URL as img src) */
+      const hasVideos = images.some(el => el.tagName === 'VIDEO');
+      if (hasVideos) {
+        /* no filmstrip, but swipe still works on the container below */
+      } else {
       const sw    = window.innerWidth;
       const tw    = 52;
       const slots = Math.max(images.length, Math.ceil(sw / tw) + 4);
@@ -340,11 +364,14 @@
         const slot = filmSlots.find(s => s.el === clickedEl);
         if (slot) show(slot.srcIdx);
       });
+      } /* end else (no video carousel) */
     }
 
     function show(i) {
       if (animating || i === current) return;
       animating = true;
+      /* pause previous video */
+      if (images[current].tagName === 'VIDEO') images[current].pause();
       gsap.to(images[current], { opacity: 0, duration: 0.35, ease: 'power1.out' });
       images[current].classList.remove('is-active');
       gsap.to(images[i], {
@@ -352,6 +379,11 @@
         onComplete: () => { animating = false; }
       });
       images[i].classList.add('is-active');
+      /* play new video */
+      if (images[i].tagName === 'VIDEO') {
+        images[i].currentTime = 0;
+        images[i].play().catch(() => {});
+      }
       current = i;
       /* update filmstrip: rotate slots so active srcIdx is at center, then render */
       if (filmSlots.length) {
@@ -510,6 +542,11 @@
 
       lazyLoad(panel, type);
 
+      /* process IG embeds after lazy load */
+      if (panel.querySelector('.instagram-media') && window.instgrm) {
+        requestAnimationFrame(() => { try { instgrm.Embeds.process(); } catch(e){} });
+      }
+
       if (window.innerWidth <= 768) {
         const info = panel.querySelector('.project-info');
         if (info) requestAnimationFrame(() => {
@@ -541,6 +578,8 @@
 
       function animateClose() {
         if (window.HScroll) HScroll.disable(panelId);
+        /* pause all videos in this panel */
+        panel.querySelectorAll('video').forEach(v => v.pause());
         gsap.to(panel, { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none' });
         gsap.to(bg,    { y: '100%', duration: 0.8, ease: 'power3.in', pointerEvents: 'none', delay: 0.1 });
       }
